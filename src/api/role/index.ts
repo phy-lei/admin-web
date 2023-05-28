@@ -6,8 +6,16 @@ enum URL {
   permission = '/v1/user/permission',
 }
 
-const login = async (data: ReqParams) => post<ResResult>({ url: URL.login, data });
+const fetchList = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
-const permission = async () => get<ReqAuth>({ url: URL.permission });
+const createRole = async () => get<ReqAuth>({ url: URL.permission });
 
-export default { login, permission };
+const updateRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+const updateStatus = async () => get<ReqAuth>({ url: URL.permission });
+
+
+const deleteRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+
+export default { fetchList, createRole, updateRole, updateStatus, deleteRole };

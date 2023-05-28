@@ -168,13 +168,15 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {
-  fetchList,
-  createRole,
-  updateRole,
-  updateStatus,
-  deleteRole,
-} from '@/api/role';
+// import {
+//   fetchList,
+//   createRole,
+//   updateRole,
+//   updateStatus,
+//   deleteRole,
+// } from '@/api/role';
+import { ref, reactive } from 'vue';
+import fetchApi from '@/api/role';
 import { formatDate } from '@/utils/date';
 
 const defaultListQuery = {
