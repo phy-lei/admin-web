@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { asyncRouterMap, constantRouterMap } from '@/router/index';
+import { asyncRouterMap, constantRouterMap } from '@/router/index'
 
 
 export const useRouterStore = defineStore('router', () => {

@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, reactive } from 'vue'
-import { getToken, setToken, removeToken } from '@/utils/auth';
-import { ReqParams } from '@/api/user/model';
-import fetchApi from '@/api/user';
+import { getToken, setToken, removeToken } from '@/utils/auth'
+import { ReqParams } from '@/api/user/model'
+import fetchApi from '@/api/user'
 
 export const useUserStore = defineStore('user', () => {
   const avatar = ref('')
-
   const login = async (params: ReqParams) => {
     // 密码加密
     // params.password = encryptByDES(params.password);
