@@ -1,7 +1,7 @@
 <template> 
   <brand-detail :is-edit='false'></brand-detail>
 </template>
-<script>
+<script lang="ts" setup>
   import BrandDetail from './components/BrandDetail'
   export default {
     name: 'addBrand',
