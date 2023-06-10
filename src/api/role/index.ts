@@ -6,16 +6,30 @@ enum URL {
   permission = '/v1/user/permission',
 }
 
-const fetchList = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+export const fetchList = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
-const createRole = async () => get<ReqAuth>({ url: URL.permission });
+export const createRole = async () => get<ReqAuth>({ url: URL.permission });
 
-const updateRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+export const updateRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
-const updateStatus = async () => get<ReqAuth>({ url: URL.permission });
+export const updateStatus = async () => get<ReqAuth>({ url: URL.permission });
+
+export const deleteRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const fetchAllRoleList = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const allocResource = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const listResourceByRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
 
-const deleteRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
-
-
-export default { fetchList, createRole, updateRole, updateStatus, deleteRole };
+export default {
+  fetchList,
+  fetchAllRoleList,
+  createRole,
+  updateRole,
+  updateStatus,
+  deleteRole,
+  allocResource,
+  listResourceByRole
+};

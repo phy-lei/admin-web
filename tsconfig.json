@@ -5,7 +5,9 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-
+    "checkJs": false,
+    "allowJs": true,
+    "noImplicitAny": false,
     /* Bundler mode */
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,

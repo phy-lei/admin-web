@@ -6,8 +6,33 @@ enum URL {
   permission = '/v1/user/permission',
 }
 
-const login = async (data: ReqParams) => post<ResResult>({ url: URL.login, data });
+export const login = async (data: ReqParams) => post<ResResult>({ url: URL.login, data });
 
-const permission = async () => get<ReqAuth>({ url: URL.permission });
+export const permission = async () => get<ReqAuth>({ url: URL.permission });
 
-export default { login, permission };
+export const fetchList = async (data: ReqParams) => post<any>({ url: URL.login, data });
+
+export const createAdmin = async () => get<ReqAuth>({ url: URL.permission });
+
+export const updateAdmin = async (data: ReqParams) => post<any>({ url: URL.login, data });
+
+export const updateStatus = async () => get<ReqAuth>({ url: URL.permission });
+
+export const deleteAdmin = async (data: ReqParams) => post<any>({ url: URL.login, data });
+
+export const getRoleByAdmin = async () => get<ReqAuth>({ url: URL.permission });
+
+export const allocRole = async (data: ReqParams) => post<any>({ url: URL.login, data });
+
+
+export default {
+  login,
+  permission,
+  fetchList,
+  createAdmin,
+  updateAdmin,
+  updateStatus,
+  deleteAdmin,
+  getRoleByAdmin,
+  allocRole,
+};
