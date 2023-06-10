@@ -8,6 +8,17 @@ enum URL {
 
 export const listAllCate = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
+export const createResourceCategory = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const updateResourceCategory = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const deleteResourceCategory = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
 
-export default { listAllCate };
+
+
+export default {
+  listAllCate, createResourceCategory,
+  updateResourceCategory,
+  deleteResourceCategory,
+};

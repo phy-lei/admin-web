@@ -15,11 +15,11 @@ import { Navbar, Sidebar, AppMain } from './components';
 import useResize from './useHooks/useResize';
 
 const { sidebar, device } = useAppStore();
-
+console.log('%c [ device ]', 'font-size:13px; background:pink; color:#bf2c9f;', device);
 const classObj = computed(() => ({
   hideSidebar: !sidebar.opened,
   withoutAnimation: sidebar.withoutAnimation,
-  mobile: device.value === 'mobile',
+  mobile: device === 'mobile',
 }));
 
 useResize();

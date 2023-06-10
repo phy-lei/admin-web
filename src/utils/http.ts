@@ -60,20 +60,19 @@ instance.interceptors.response.use(
     // if (res.code === -1) {
     //   useUserStoreWithOut().logout();
     // }
-
     // 异常
     ElMessage.error(res.message);
-    return undefined;
   },
   (error) => {
     console.log('err' + error); // for debug
     // 没权限时，不再重复提示
     if (error === '没有操作权限') return;
     ElMessage.error('网络超时，稍后再试吧');
+    throw new Error('error');
   },
 );
 
-const request = <T = any>(
+const request = async <T = any>(
   config: AxiosRequestConfig | string,
   options?: AxiosRequestConfig,
 ): Promise<T> => {
@@ -82,7 +81,7 @@ const request = <T = any>(
       return instance.request<T, T>({
         url: config,
       });
-      // throw new Error('请配置正确的请求参数');
+
     } else {
       return instance.request<T, T>({
         url: config,
@@ -92,12 +91,14 @@ const request = <T = any>(
   } else {
     return instance.request<T, T>(config);
   }
+
+
 };
-export function get<T = any>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> {
+export async function get<T = any>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> {
   return request({ ...config, method: 'GET' }, options);
 }
 
-export function post<T = any>(
+export async function post<T = any>(
   config: AxiosRequestConfig,
   options?: AxiosRequestConfig,
 ): Promise<T> {

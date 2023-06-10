@@ -8,6 +8,14 @@ enum URL {
 
 export const fetchAllResourceList = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
+export const fetchList = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const createResource = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const updateResource = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const deleteResource = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
 
-export default { fetchAllResourceList };
+
+export default { fetchAllResourceList, fetchList, createResource, updateResource, deleteResource };

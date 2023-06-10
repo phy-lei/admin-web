@@ -17,10 +17,10 @@
         </el-button>
       </div>
       <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
+        <el-form :inline="true" :model="data.listQuery" size="small" label-width="140px">
           <el-form-item label="资源名称：">
             <el-input
-              v-model="listQuery.nameKeyword"
+              v-model="data.listQuery.nameKeyword"
               class="input-width"
               placeholder="资源名称"
               clearable
@@ -28,7 +28,7 @@
           </el-form-item>
           <el-form-item label="资源路径：">
             <el-input
-              v-model="listQuery.urlKeyword"
+              v-model="data.listQuery.urlKeyword"
               class="input-width"
               placeholder="资源路径"
               clearable
@@ -36,13 +36,13 @@
           </el-form-item>
           <el-form-item label="资源分类：">
             <el-select
-              v-model="listQuery.categoryId"
+              v-model="data.listQuery.categoryId"
               placeholder="全部"
               clearable
               class="input-width"
             >
               <el-option
-                v-for="item in categoryOptions"
+                v-for="item in data.categoryOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -61,7 +61,13 @@
       <el-button size="small" class="btn-add" @click="handleShowCategory()">资源分类</el-button>
     </el-card>
     <div class="table-container">
-      <el-table ref="resourceTable" :data="list" style="width: 100%" v-loading="listLoading" border>
+      <el-table
+        ref="resourceTable"
+        :data="data.list"
+        style="width: 100%"
+        v-loading="data.listLoading"
+        border
+      >
         <el-table-column label="编号" width="100" align="center">
           <template #default="scope">{{ scope.row.id }}</template>
         </el-table-column>
@@ -75,7 +81,7 @@
           <template #default="scope">{{ scope.row.description }}</template>
         </el-table-column>
         <el-table-column label="添加时间" width="160" align="center">
-          <template #default="scope">{{ scope.row.createTime | formatDateTime }}</template>
+          <template #default="scope">{{ formatDateTime(scope.row.createTime) }}</template>
         </el-table-column>
         <el-table-column label="操作" width="140" align="center">
           <template #default="scope">
@@ -95,29 +101,33 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
-        :current-page.sync="listQuery.pageNum"
-        :page-size="listQuery.pageSize"
+        :current-page.sync="data.listQuery.pageNum"
+        :page-size="data.listQuery.pageSize"
         :page-sizes="[10, 15, 20]"
-        :total="total"
+        :total="data.total"
       ></el-pagination>
     </div>
-    <el-dialog :title="isEdit ? '编辑资源' : '添加资源'" :visible.sync="dialogVisible" width="40%">
-      <el-form :model="resource" ref="resourceForm" label-width="150px" size="small">
+    <el-dialog
+      :title="data.isEdit ? '编辑资源' : '添加资源'"
+      :visible.sync="data.dialogVisible"
+      width="40%"
+    >
+      <el-form :model="data.resource" ref="resourceForm" label-width="150px" size="small">
         <el-form-item label="资源名称：">
-          <el-input v-model="resource.name" style="width: 250px"></el-input>
+          <el-input v-model="data.resource.name" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="资源路径：">
-          <el-input v-model="resource.url" style="width: 250px"></el-input>
+          <el-input v-model="data.resource.url" style="width: 250px"></el-input>
         </el-form-item>
         <el-form-item label="资源分类：">
           <el-select
-            v-model="resource.categoryId"
+            v-model="data.resource.categoryId"
             placeholder="全部"
             clearable
             style="width: 250px"
           >
             <el-option
-              v-for="item in categoryOptions"
+              v-for="item in data.categoryOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -126,7 +136,7 @@
         </el-form-item>
         <el-form-item label="描述：">
           <el-input
-            v-model="resource.description"
+            v-model="data.resource.description"
             type="textarea"
             :rows="5"
             style="width: 250px"
@@ -134,13 +144,16 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button @click="data.dialogVisible = false" size="small">取 消</el-button>
         <el-button type="primary" @click="handleDialogConfirm()" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
-<script>
+<script lang="ts" setup>
+import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { fetchList, createResource, updateResource, deleteResource } from '@/api/resource';
 import { listAllCate } from '@/api/resourceCategory';
 import { formatDate } from '@/utils/date';
@@ -159,126 +172,119 @@ const defaultResource = {
   categoryId: null,
   description: '',
 };
-export default {
-  name: 'resourceList',
-  data() {
-    return {
-      listQuery: Object.assign({}, defaultListQuery),
-      list: null,
-      total: null,
-      listLoading: false,
-      dialogVisible: false,
-      resource: Object.assign({}, defaultResource),
-      isEdit: false,
-      categoryOptions: [],
-      defaultCategoryId: null,
-    };
-  },
-  created() {
-    this.getList();
-    this.getCateList();
-  },
-  filters: {
-    formatDateTime(time) {
-      if (time == null || time === '') {
-        return 'N/A';
-      }
-      let date = new Date(time);
-      return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
-    },
-  },
-  methods: {
-    handleResetSearch() {
-      this.listQuery = Object.assign({}, defaultListQuery);
-    },
-    handleSearchList() {
-      this.listQuery.pageNum = 1;
-      this.getList();
-    },
-    handleSizeChange(val) {
-      this.listQuery.pageNum = 1;
-      this.listQuery.pageSize = val;
-      this.getList();
-    },
-    handleCurrentChange(val) {
-      this.listQuery.pageNum = val;
-      this.getList();
-    },
-    handleAdd() {
-      this.dialogVisible = true;
-      this.isEdit = false;
-      this.resource = Object.assign({}, defaultResource);
-      this.resource.categoryId = this.defaultCategoryId;
-    },
-    handleDelete(index, row) {
-      ElMessageBox.confirm('是否要删除该资源?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }).then(() => {
-        deleteResource(row.id).then((response) => {
-          ElMessage({
-            type: 'success',
-            message: '删除成功!',
-          });
-          this.getList();
+const router = useRouter();
+
+const data = reactive<any>({
+  listQuery: Object.assign({}, defaultListQuery),
+  list: [],
+  total: 0,
+  listLoading: false,
+  dialogVisible: false,
+  resource: Object.assign({}, defaultResource),
+  isEdit: false,
+  categoryOptions: [],
+  defaultCategoryId: null,
+});
+getList();
+getCateList();
+
+function formatDateTime(time) {
+  if (time == null || time === '') {
+    return 'N/A';
+  }
+  let date = new Date(time);
+  return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+}
+
+function handleResetSearch() {
+  data.listQuery = Object.assign({}, defaultListQuery);
+}
+function handleSearchList() {
+  data.listQuery.pageNum = 1;
+  getList();
+}
+function handleSizeChange(val) {
+  data.listQuery.pageNum = 1;
+  data.listQuery.pageSize = val;
+  getList();
+}
+function handleCurrentChange(val) {
+  data.listQuery.pageNum = val;
+  getList();
+}
+function handleAdd() {
+  data.dialogVisible = true;
+  data.isEdit = false;
+  data.resource = Object.assign({}, defaultResource);
+  data.resource.categoryId = data.defaultCategoryId;
+}
+function handleDelete(index, row) {
+  ElMessageBox.confirm('是否要删除该资源?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteResource(row.id).then((response) => {
+      ElMessage({
+        type: 'success',
+        message: '删除成功!',
+      });
+      getList();
+    });
+  });
+}
+function handleUpdate(index, row) {
+  data.dialogVisible = true;
+  data.isEdit = true;
+  data.resource = Object.assign({}, row);
+}
+function handleDialogConfirm() {
+  ElMessageBox.confirm('是否要确认?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    if (data.isEdit) {
+      updateResource(data.resource.id, data.resource).then((response) => {
+        ElMessage({
+          message: '修改成功！',
+          type: 'success',
         });
+        data.dialogVisible = false;
+        getList();
       });
-    },
-    handleUpdate(index, row) {
-      this.dialogVisible = true;
-      this.isEdit = true;
-      this.resource = Object.assign({}, row);
-    },
-    handleDialogConfirm() {
-      ElMessageBox.confirm('是否要确认?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }).then(() => {
-        if (this.isEdit) {
-          updateResource(this.resource.id, this.resource).then((response) => {
-            ElMessage({
-              message: '修改成功！',
-              type: 'success',
-            });
-            this.dialogVisible = false;
-            this.getList();
-          });
-        } else {
-          createResource(this.resource).then((response) => {
-            ElMessage({
-              message: '添加成功！',
-              type: 'success',
-            });
-            this.dialogVisible = false;
-            this.getList();
-          });
-        }
+    } else {
+      createResource(data.resource).then((response) => {
+        ElMessage({
+          message: '添加成功！',
+          type: 'success',
+        });
+        data.dialogVisible = false;
+        getList();
       });
-    },
-    handleShowCategory() {
-      this.$router.push({ path: '/ums/resourceCategory' });
-    },
-    getList() {
-      this.listLoading = true;
-      fetchList(this.listQuery).then((response) => {
-        this.listLoading = false;
-        this.list = response.data.list;
-        this.total = response.data.total;
-      });
-    },
-    getCateList() {
-      listAllCate().then((response) => {
-        let cateList = response.data;
-        for (let i = 0; i < cateList.length; i++) {
-          let cate = cateList[i];
-          this.categoryOptions.push({ label: cate.name, value: cate.id });
-        }
-        this.defaultCategoryId = cateList[0].id;
-      });
-    },
-  },
-};
+    }
+  });
+}
+function handleShowCategory() {
+  router.push({ path: '/ums/resourceCategory' });
+}
+function getList() {
+  data.listLoading = true;
+  fetchList(data.listQuery).then((response) => {
+    data.listLoading = false;
+    data.list = response.data.list;
+    data.total = response.data.total;
+  });
+}
+function getCateList() {
+  listAllCate().then((response) => {
+    let cateList = response.data;
+    for (let i = 0; i < cateList.length; i++) {
+      let cate = cateList[i];
+      data.categoryOptions.push({ label: cate.name, value: cate.id });
+    }
+    data.defaultCategoryId = cateList[0].id;
+  });
+}
 </script>
 <style></style>

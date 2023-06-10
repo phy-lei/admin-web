@@ -5,7 +5,7 @@ type Device = 'mobile' | 'desktop'
 
 export const useAppStore = defineStore('app', () => {
   const sidebar = reactive({
-    opened: false,
+    opened: true,
     withoutAnimation: false
   })
 

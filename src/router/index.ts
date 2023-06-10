@@ -18,31 +18,22 @@ import Layout from '../views/layout/Layout.vue'
     icon: 'svg-name'             the icon show in the sidebar,
   }
  **/
+
+
+
 export const constantRouterMap: RouteRecordRaw[] = [
-  { path: '/login', component: () => import('@/views/login/login.vue') },
+  { path: '/login', component: () => import('@/views/login/login.vue'), hidden: true },
   // { path: '/404', component: () => import('@/views/404'),  },
   {
     path: '',
     component: Layout,
     redirect: '/home',
+    meta: { title: '首页', icon: 'home' },
     children: [{
-      path: 'home',
+      path: '/home',
       name: 'home',
       component: () => import('@/views/home/home.vue'),
       meta: { title: '首页', icon: 'home' }
-    },
-    ]
-  },
-
-  {
-    path: '/atom',
-    component: Layout,
-    redirect: '/atom',
-    children: [{
-      path: 'product',
-      name: 'product',
-      component: () => import('@/views/atom/atom.vue'),
-      meta: { title: 'atom', icon: 'home' }
     },
     ]
   },
@@ -59,63 +50,63 @@ export const asyncRouterMap: RouteRecordRaw[] = [
     meta: { title: '权限', icon: 'ums' },
     children: [
       {
-        path: 'admin',
+        path: '/ums/admin',
         name: 'admin',
         component: () => import('@/views/ums/admin/index.vue'),
-        meta: { title: '用户列表', icon: 'ums-admin' }
+        meta: { title: '用户列表', icon: 'ums-admin' },
       },
       {
-        path: 'role',
+        path: '/ums/role',
         name: 'role',
         component: () => import('@/views/ums/role/index.vue'),
         meta: { title: '角色列表', icon: 'ums-role' }
       },
       {
-        path: 'allocMenu',
+        path: '/ums/allocMenu',
         name: 'allocMenu',
         component: () => import('@/views/ums/role/allocMenu.vue'),
-        meta: { title: '分配菜单' },
-
+        meta: { title: '分配菜单', },
+        hidden: true
       },
       {
-        path: 'allocResource',
+        path: '/ums/allocResource',
         name: 'allocResource',
         component: () => import('@/views/ums/role/allocResource.vue'),
-        meta: { title: '分配资源' },
-
+        meta: { title: '分配资源', },
+        hidden: true
       },
       {
-        path: 'menu',
+        path: '/ums/menu',
         name: 'menu',
         component: () => import('@/views/ums/menu/index.vue'),
         meta: { title: '菜单列表', icon: 'ums-menu' }
       },
       {
-        path: 'addMenu',
+        path: '/ums/addMenu',
         name: 'addMenu',
         component: () => import('@/views/ums/menu/add.vue'),
-        meta: { title: '添加菜单' },
-
+        meta: { title: '添加菜单', },
+        hidden: true
       },
       {
-        path: 'updateMenu',
+        path: '/ums/updateMenu',
         name: 'updateMenu',
         component: () => import('@/views/ums/menu/update.vue'),
-        meta: { title: '修改菜单' },
-
+        meta: { title: '修改菜单', },
+        hidden: true
       },
       {
-        path: 'resource',
+        path: '/ums/resource',
         name: 'resource',
         component: () => import('@/views/ums/resource/index.vue'),
         meta: { title: '资源列表', icon: 'ums-resource' }
       },
       {
-        path: 'resourceCategory',
+        path: '/ums/resourceCategory',
         name: 'resourceCategory',
         component: () => import('@/views/ums/resource/categoryList.vue'),
-        meta: { title: '资源分类' },
-
+        meta: { title: '资源分类', },
+        hidden: true
       }
     ]
   },

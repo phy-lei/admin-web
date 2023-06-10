@@ -58,10 +58,11 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/user';
 
 const store = useUserStore();
-
+const router = useRouter();
 const loginForm = reactive({
   username: '',
   password: '',
@@ -105,7 +106,13 @@ const handleLogin = () => {
           lqbUsername: loginForm.username,
           lqbPasswd: loginForm.password,
         })
-        .then(() => {
+        .then((res) => {
+          console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', res);
+          if (res) {
+            router.push({ name: 'home' });
+          }
+        })
+        .finally(() => {
           loading.value = false;
         });
       // this.$store

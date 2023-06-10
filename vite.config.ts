@@ -1,9 +1,10 @@
 import path from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
+import vueJsx from '@vitejs/plugin-vue-jsx';
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 import proxy from './config/vite/proxy';
 
@@ -25,6 +26,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    vueJsx(), // 开启jsx编译
     Components({
       // allow auto load markdown components under `./src/components/`
       extensions: ['vue', 'md'],
@@ -37,6 +39,25 @@ export default defineConfig({
       ],
       dts: 'src/components.d.ts',
     }),
+    createSvgIconsPlugin({
+      // 指定需要缓存的图标文件夹
+      iconDirs: [path.resolve(process.cwd(), "src/icons/svg")],
+      // 指定symbolId格式
+      symbolId: "icon-[dir]-[name]",
+
+      /**
+       * 自定义插入位置
+       * @default: body-last
+       */
+      // inject?: 'body-last' | 'body-first'
+
+      /**
+       * custom dom id
+       * @default: __svg__icons__dom__
+       */
+      // customDomId: '__svg__icons__dom__',
+    }),
+
   ],
 
   // server

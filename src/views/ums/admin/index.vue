@@ -44,31 +44,18 @@
         v-loading="data.listLoading"
         border
       >
-        <el-table-column label="编号" width="100" align="center">
-          <template #default="scope">{{ scope.row.id }}</template>
-        </el-table-column>
-        <el-table-column label="帐号" align="center">
-          <template #default="scope">{{ scope.row.username }}</template>
-        </el-table-column>
-        <el-table-column label="姓名" align="center">
-          <template #default="scope">{{ scope.row.nickName }}</template>
-        </el-table-column>
-        <el-table-column label="邮箱" align="center">
-          <template #default="scope">{{ scope.row.email }}</template>
-        </el-table-column>
-        <el-table-column label="添加时间" width="160" align="center">
-          <template #default="scope">{{ formatDateTime(scope.row.createTime) }}</template>
-        </el-table-column>
-        <el-table-column label="最后登录" width="160" align="center">
-          <template #default="scope">{{ formatDateTime(scope.row.loginTime) }}</template>
-        </el-table-column>
+        <el-table-column label="编号" width="100" align="center" prop="id"></el-table-column>
+        <el-table-column label="姓名" align="center" prop="lqbNickName"></el-table-column>
+        <el-table-column label="邮箱" align="center" prop="lqbEmail"></el-table-column>
+        <el-table-column label="手机号" align="center" prop="lqbMobile"></el-table-column>
         <el-table-column label="是否启用" width="140" align="center">
           <template #default="scope">
             <el-switch
               @change="handleStatusChange(scope.row)"
               :active-value="1"
               :inactive-value="0"
-              v-model="scope.row.status"
+              :loading="scope.row.loading"
+              v-model="scope.row.lqbUserStatus"
             ></el-switch>
           </template>
         </el-table-column>
@@ -160,7 +147,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import {
   fetchList,
@@ -173,12 +160,11 @@ import {
 } from '@/api/user';
 
 import { fetchAllRoleList } from '@/api/role';
-import { formatDate } from '@/utils/date';
 
 const defaultListQuery = {
   pageNum: 1,
-  pageSize: 10,
-  keyword: null,
+  pageSize: 20,
+  keyword: '',
 };
 const defaultAdmin = {
   id: null,
@@ -189,7 +175,7 @@ const defaultAdmin = {
   note: null,
   status: 1,
 };
-
+const isComplete = ref(false);
 const data = reactive<any>({
   listQuery: Object.assign({}, defaultListQuery),
   list: [],
@@ -205,15 +191,8 @@ const data = reactive<any>({
 });
 
 getList();
-getAllRoleList();
+// getAllRoleList();
 
-function formatDateTime(time) {
-  if (time == null || time === '') {
-    return 'N/A';
-  }
-  let date = new Date(time);
-  return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
-}
 function handleResetSearch() {
   data.listQuery = Object.assign({}, defaultListQuery);
 }
@@ -242,19 +221,31 @@ function handleStatusChange(row) {
     type: 'warning',
   })
     .then(() => {
-      updateStatus(row.id, { status: row.status }).then((response) => {
-        ElMessage({
-          type: 'success',
-          message: '修改成功!',
+      updateStatus({
+        lqbId: row.lqbId,
+        lqbStatus: 1 ^ row.lqbUserStatus,
+      })
+        .then((response) => {
+          console.log(
+            '%c [ response ]',
+            'font-size:13px; background:pink; color:#bf2c9f;',
+            response
+          );
+          ElMessage({
+            type: 'success',
+            message: '修改成功!',
+          });
+        })
+        .catch(() => {
+          row.lqbUserStatus = 1 ^ row.lqbUserStatus;
         });
-      });
     })
     .catch(() => {
+      row.lqbUserStatus = 1 ^ row.lqbUserStatus;
       ElMessage({
         type: 'info',
         message: '取消修改',
       });
-      getList();
     });
 }
 function handleDelete(index, row) {
@@ -330,9 +321,13 @@ function handleSelectRole(index, row) {
 function getList() {
   data.listLoading = true;
   fetchList(data.listQuery).then((response) => {
+    console.log('%c [ response ]', 'font-size:13px; background:pink; color:#bf2c9f;', response);
     data.listLoading = false;
-    data.list = response.data.list;
-    data.total = response.data.total;
+    data.list = response.list;
+    data.total = response.total;
+    setTimeout(() => {
+      isComplete.value = true;
+    }, 2000);
   });
 }
 function getAllRoleList() {

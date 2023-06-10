@@ -22,6 +22,10 @@ export const allocResource = async (data: ReqParams) => get<ResResult>({ url: UR
 
 export const listResourceByRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
 
+export const allocMenu = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
+export const listMenuByRole = async (data: ReqParams) => get<ResResult>({ url: URL.login, data });
+
 
 export default {
   fetchList,
@@ -31,5 +35,7 @@ export default {
   updateStatus,
   deleteRole,
   allocResource,
-  listResourceByRole
+  listResourceByRole,
+  allocMenu,
+  listMenuByRole
 };
