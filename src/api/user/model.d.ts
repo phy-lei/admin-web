@@ -90,7 +90,7 @@ interface ResponseDataListItemResourceListItem {
   lqbUrl?: string
 }
 
-interface UserListListItem {
+export interface UserListListItem {
   /** 部门 */
   departments?: ResponseDataListItemDepartmentsItem[]
   /** 资源过滤 */

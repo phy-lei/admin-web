@@ -1,154 +1,116 @@
 <template>
-   
-  <div class="app-container">
-    <el-card class="filter-container" shadow="never">
-      <div>
-        <i class="el-icon-search"></i>
-        <span>筛选搜索</span>
-        <el-button style="float: right" type="primary" @click="handleSearchList()" size="small">
-          查询搜索
-        </el-button>
-        <el-button
-          style="float: right; margin-right: 15px"
-          @click="handleResetSearch()"
-          size="small"
-        >
-          重置
-        </el-button>
+  <ProTable ref="proTable" :columns="columns" :requestApi="fetchList">
+    <!-- 表格 header 按钮 -->
+    <template #tableHeader>
+      <el-button type="primary" plain @click="handleAdd">添加</el-button>
+    </template>
+
+    <!-- 用户状态 slot -->
+    <template #lqbUserStatus="scope">
+      <!-- 如果插槽的值为 el-switch，第一次加载会默认触发 switch 的 @change 方法，所有在外层包一个盒子，点击触发盒子 click 方法（暂时只能这样解决） -->
+      <div @click="handleStatusChange(scope.row)">
+        <el-switch
+          :value="scope.row.lqbUserStatus"
+          :active-text="scope.row.lqbUserStatus === 1 ? '启用' : '禁用'"
+          :active-value="1"
+          :inactive-value="0"
+        />
       </div>
-      <div style="margin-top: 15px">
-        <el-form :inline="true" :model="data.listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input
-              v-model="data.listQuery.keyword"
-              class="input-width"
-              placeholder="帐号/姓名"
-              clearable
-            ></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-card>
-    <el-card class="operate-container" shadow="never">
-      <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
-      <el-button size="small" class="btn-add" @click="handleAdd()" style="margin-left: 20px">
-        添加
+    </template>
+    <!-- 表格操作 -->
+    <template #operation="scope">
+      <el-button type="primary" @click="handleSelectRole(scope.$index, scope.row)">
+        分配角色
       </el-button>
-    </el-card>
-    <div class="table-container">
-      <el-table
-        ref="adminTable"
-        :data="data.list"
-        style="width: 100%"
-        v-loading="data.listLoading"
-        border
-      >
-        <el-table-column label="编号" width="100" align="center" prop="id"></el-table-column>
-        <el-table-column label="姓名" align="center" prop="lqbNickName"></el-table-column>
-        <el-table-column label="邮箱" align="center" prop="lqbEmail"></el-table-column>
-        <el-table-column label="手机号" align="center" prop="lqbMobile"></el-table-column>
-        <el-table-column label="是否启用" width="140" align="center">
-          <template #default="scope">
-            <el-switch
-              @change="handleStatusChange(scope.row)"
-              :active-value="1"
-              :inactive-value="0"
-              :loading="scope.row.loading"
-              v-model="scope.row.lqbUserStatus"
-            ></el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
-          <template #default="scope">
-            <el-button size="small" type="text" @click="handleSelectRole(scope.$index, scope.row)">
-              分配角色
-            </el-button>
-            <el-button size="small" type="text" @click="handleUpdate(scope.$index, scope.row)">
-              编辑
-            </el-button>
-            <el-button size="small" type="text" @click="handleDelete(scope.$index, scope.row)">
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <div class="pagination-container">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        layout="total, sizes,prev, pager, next,jumper"
-        :current-page.sync="data.listQuery.pageNum"
-        :page-size="data.listQuery.pageSize"
-        :page-sizes="[10, 15, 20]"
-        :total="data.total"
-      ></el-pagination>
-    </div>
-    <el-dialog
-      :title="data.isEdit ? '编辑用户' : '添加用户'"
-      :visible.sync="data.dialogVisible"
-      width="40%"
-    >
-      <el-form :model="data.admin" ref="adminForm" label-width="150px" size="small">
-        <el-form-item label="帐号：">
-          <el-input v-model="data.admin.username" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名：">
-          <el-input v-model="data.admin.nickName" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱：">
-          <el-input v-model="data.admin.email" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="密码：">
-          <el-input v-model="data.admin.password" type="password" style="width: 250px"></el-input>
-        </el-form-item>
-        <el-form-item label="备注：">
+      <el-button type="primary" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
+      <el-button type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+    </template>
+  </ProTable>
+
+  <el-dialog
+    :title="data.isEdit ? '编辑用户' : '添加用户'"
+    v-model="data.dialogVisible"
+    width="50%"
+  >
+    <el-form :model="data.admin" ref="adminForm" label-width="150px" :inline="true">
+      <el-form-item label="用户名称：">
+        <el-input v-model="data.admin.lqbNickName" style="width: 250px"></el-input>
+      </el-form-item>
+      <el-form-item label="归属部门：">
+        <el-tree-select
+          v-model="data.admin.departments"
+          :data="departmentsList"
+          check-strictly
+          :render-after-expand="false"
+          multiple
+        />
+      </el-form-item>
+      <el-form-item label="手机号码：">
+        <el-input v-model="data.admin.lqbMobile" style="width: 250px"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱：">
+        <el-input v-model="data.admin.lqbEmail" style="width: 250px"></el-input>
+      </el-form-item>
+      <!-- <el-form-item label="密码：">
+          <el-input v-model="data.admin.lqbMobile" type="password" style="width: 250px"></el-input>
+        </el-form-item> -->
+      <!-- <el-form-item label="备注：">
           <el-input
-            v-model="data.admin.note"
+            v-model="data.admin.memo"
             type="textarea"
             :rows="5"
             style="width: 250px"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="是否启用：">
-          <el-radio-group v-model="data.admin.status">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="data.dialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="handleDialogConfirm()" size="small">确 定</el-button>
+        </el-form-item> -->
+      <el-form-item label="登录帐号：">
+        <el-input v-model="data.admin.lqbUsername" style="width: 250px" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="是否启用：">
+        <el-radio-group v-model="data.admin.lqbUserStatus">
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="性别：">
+        <el-radio-group v-model="data.admin.lqbGender">
+          <el-radio :label="1">男</el-radio>
+          <el-radio :label="0">女</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="data.dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleDialogConfirm()">确 定</el-button>
       </span>
-    </el-dialog>
-    <el-dialog title="分配角色" :visible.sync="data.allocDialogVisible" width="30%">
-      <el-select
-        v-model="data.allocRoleIds"
-        multiple
-        placeholder="请选择"
-        size="small"
-        style="width: 80%"
-      >
-        <el-option
-          v-for="item in data.allRoleList"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="data.allocDialogVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="handleAllocDialogConfirm()" size="small">确 定</el-button>
-      </span>
-    </el-dialog>
-  </div>
+    </template>
+  </el-dialog>
+  <el-dialog title="分配角色" v-model="data.allocDialogVisible" width="30%">
+    <el-select
+      v-model="data.allocRoleIds"
+      multiple
+      placeholder="请选择"
+      size="small"
+      style="width: 80%"
+    >
+      <el-option
+        v-for="item in data.allRoleList"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
+      ></el-option>
+    </el-select>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="data.allocDialogVisible = false" size="small">取 消</el-button>
+      <el-button type="primary" @click="handleAllocDialogConfirm()" size="small">确 定</el-button>
+    </span>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import ProTable from '@/components/ProTable/index.vue';
+import { ColumnProps } from '@/components/ProTable/interface';
 import {
   fetchList,
   createAdmin,
@@ -175,12 +137,32 @@ const defaultAdmin = {
   note: null,
   status: 1,
 };
-const isComplete = ref(false);
+const proTable = ref<InstanceType<typeof ProTable>>();
+const columns: Partial<ColumnProps>[] = [
+  { type: 'index', label: '#', width: 80 },
+  {
+    prop: 'lqbNickName',
+    label: '姓名',
+    width: 130,
+    search: { el: 'input', key: 'keyword' },
+  },
+  // 😄 enum 可以直接是数组对象，也可以是请求方法(proTable 内部会执行获取 enum 的这个方法)，下面用户状态也同理
+  // 😄 enum 为请求方法时，后台返回的数组对象 key 值不是 label 和 value 的情况，可以在 searchProps 中指定 label 和 value 的 key 值
+  {
+    prop: 'lqbGender',
+    label: '性别',
+    width: 80,
+  },
+  { prop: 'lqbEmail', label: '邮箱' },
+  { prop: 'lqbMobile', label: '手机号' },
+  {
+    prop: 'lqbUserStatus',
+    label: '状态',
+  },
+  { prop: 'operation', label: '操作', width: 330, fixed: 'right' },
+];
+
 const data = reactive<any>({
-  listQuery: Object.assign({}, defaultListQuery),
-  list: [],
-  total: 0,
-  listLoading: false,
   dialogVisible: false,
   admin: Object.assign({}, defaultAdmin),
   isEdit: false,
@@ -190,25 +172,79 @@ const data = reactive<any>({
   allocAdminId: null,
 });
 
-getList();
-// getAllRoleList();
+const departmentsList = ref([
+  {
+    value: '1',
+    label: 'Level one 1',
+    children: [
+      {
+        value: '1-1',
+        label: 'Level two 1-1',
+        children: [
+          {
+            value: '1-1-1',
+            label: 'Level three 1-1-1',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: '2',
+    label: 'Level one 2',
+    children: [
+      {
+        value: '2-1',
+        label: 'Level two 2-1',
+        children: [
+          {
+            value: '2-1-1',
+            label: 'Level three 2-1-1',
+          },
+        ],
+      },
+      {
+        value: '2-2',
+        label: 'Level two 2-2',
+        children: [
+          {
+            value: '2-2-1',
+            label: 'Level three 2-2-1',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: '3',
+    label: 'Level one 3',
+    children: [
+      {
+        value: '3-1',
+        label: 'Level two 3-1',
+        children: [
+          {
+            value: '3-1-1',
+            label: 'Level three 3-1-1',
+          },
+        ],
+      },
+      {
+        value: '3-2',
+        label: 'Level two 3-2',
+        children: [
+          {
+            value: '3-2-1',
+            label: 'Level three 3-2-1',
+          },
+        ],
+      },
+    ],
+  },
+]);
 
-function handleResetSearch() {
-  data.listQuery = Object.assign({}, defaultListQuery);
-}
-function handleSearchList() {
-  data.listQuery.pageNum = 1;
-  getList();
-}
-function handleSizeChange(val) {
-  data.listQuery.pageNum = 1;
-  data.listQuery.pageSize = val;
-  getList();
-}
-function handleCurrentChange(val) {
-  data.listQuery.pageNum = val;
-  getList();
-}
+getAllRoleList();
+
 function handleAdd() {
   data.dialogVisible = true;
   data.isEdit = false;
@@ -225,16 +261,12 @@ function handleStatusChange(row) {
         lqbId: row.lqbId,
         lqbStatus: 1 ^ row.lqbUserStatus,
       })
-        .then((response) => {
-          console.log(
-            '%c [ response ]',
-            'font-size:13px; background:pink; color:#bf2c9f;',
-            response
-          );
+        .then(() => {
           ElMessage({
             type: 'success',
             message: '修改成功!',
           });
+          proTable.value?.getTableList();
         })
         .catch(() => {
           row.lqbUserStatus = 1 ^ row.lqbUserStatus;
@@ -259,7 +291,7 @@ function handleDelete(index, row) {
         type: 'success',
         message: '删除成功!',
       });
-      getList();
+      proTable.value?.getTableList();
     });
   });
 }
@@ -267,6 +299,7 @@ function handleUpdate(index, row) {
   data.dialogVisible = true;
   data.isEdit = true;
   data.admin = Object.assign({}, row);
+  console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', data.admin);
 }
 function handleDialogConfirm() {
   ElMessageBox.confirm('是否要确认?', '提示', {
@@ -275,13 +308,13 @@ function handleDialogConfirm() {
     type: 'warning',
   }).then(() => {
     if (data.isEdit) {
-      updateAdmin(data.admin.id, data.admin).then((response) => {
+      updateAdmin(data.admin).then((response) => {
         ElMessage({
           message: '修改成功！',
           type: 'success',
         });
         data.dialogVisible = false;
-        getList();
+        proTable.value?.getTableList();
       });
     } else {
       createAdmin(data.admin).then((response) => {
@@ -290,7 +323,7 @@ function handleDialogConfirm() {
           type: 'success',
         });
         data.dialogVisible = false;
-        getList();
+        proTable.value?.getTableList();
       });
     }
   });
@@ -316,23 +349,12 @@ function handleAllocDialogConfirm() {
 function handleSelectRole(index, row) {
   data.allocAdminId = row.id;
   data.allocDialogVisible = true;
-  getRoleListByAdmin(row.id);
+  // getRoleListByAdmin(row.id);
 }
-function getList() {
-  data.listLoading = true;
-  fetchList(data.listQuery).then((response) => {
-    console.log('%c [ response ]', 'font-size:13px; background:pink; color:#bf2c9f;', response);
-    data.listLoading = false;
-    data.list = response.list;
-    data.total = response.total;
-    setTimeout(() => {
-      isComplete.value = true;
-    }, 2000);
-  });
-}
+
 function getAllRoleList() {
   fetchAllRoleList().then((response) => {
-    data.allRoleList = response.data;
+    data.allRoleList = response;
   });
 }
 function getRoleListByAdmin(adminId) {

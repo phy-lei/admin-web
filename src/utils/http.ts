@@ -54,8 +54,12 @@ instance.interceptors.response.use(
     // 正确状态
     if (res.code === 200) {
       return res.data || true;
-    }
+    } else if (res.code === 401 || res.code === 403) {
+      ElMessage.error('没有操作权限')
+      window.location.href = '/#/login'
 
+      return;
+    }
     // 登录失效
     // if (res.code === -1) {
     //   useUserStoreWithOut().logout();

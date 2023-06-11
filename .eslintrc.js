@@ -23,7 +23,7 @@ module.exports = {
     'no-alert': 'off', // 禁用 alert
     // indent: ['error', 2, { SwitchCase: 1 }], // 强制使用两个空格作为缩进
 
-    '@typescript-eslint/semi': 1,
+    // '@typescript-eslint/semi': 1,
     '@typescript-eslint/member-delimiter-style': 0,
     'comma-dangle': ['error', 'always-multiline'], // 逗号结束
     'no-param-reassign': 'error', // 禁止对 function 的参数进行重新赋值

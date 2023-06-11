@@ -48,16 +48,16 @@
           <template #default="scope">{{ scope.row.id }}</template>
         </el-table-column>
         <el-table-column label="角色名称" align="center">
-          <template #default="scope">{{ scope.row.name }}</template>
+          <template #default="scope">{{ scope.row.lqbRoleName }}</template>
         </el-table-column>
         <el-table-column label="描述" align="center">
-          <template #default="scope">{{ scope.row.description }}</template>
+          <template #default="scope">{{ scope.row.lqbRemark }}</template>
         </el-table-column>
         <el-table-column label="用户数" width="100" align="center">
-          <template #default="scope">{{ scope.row.adminCount }}</template>
+          <template #default="scope">{{ scope.row.lqbRoleStatus }}</template>
         </el-table-column>
         <el-table-column label="添加时间" width="160" align="center">
-          <template #default="scope">{{ formatDateTime(scope.row.createTime) }}</template>
+          <template #default="scope">{{ formatDateTime(scope.row.lqbCreateTime) }}</template>
         </el-table-column>
         <el-table-column label="是否启用" width="140" align="center">
           <template #default="scope">

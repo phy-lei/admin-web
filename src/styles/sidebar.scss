@@ -1,25 +1,21 @@
 #app {
   // 主体区域
   .main-container {
+    flex: 1;
     min-height: 100%;
     transition: margin-left 0.28s;
-    margin-left: 180px;
   }
 
   // 侧边栏
   .sidebar-container {
-    background-color: #304156;
+    background-color: $subMenuBg;
+    width: auto;
+    height: 100vh;
+    z-index: 1001;
+    overflow: hidden;
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
     }
-    height: 100%;
-    position: fixed;
-    font-size: 0px;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1001;
-    overflow: hidden;
     a {
       display: inline-block;
       width: 100%;
@@ -34,7 +30,7 @@
 
   .hideSidebar {
     .main-container {
-      margin-left: calc(var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2);
+      // margin-left: calc(var(--el-menu-icon-width) + var(--el-menu-base-level-padding) * 2);
     }
     .el-sub-menu__title {
       display: block;
@@ -62,7 +58,7 @@
     &.hideSidebar {
       .sidebar-container {
         transition-duration: 0.3s;
-        transform: translate3d(-180px, 0, 0);
+        // transform: translate3d(-180px, 0, 0);
       }
     }
   }

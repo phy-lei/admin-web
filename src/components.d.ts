@@ -10,6 +10,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Breadcrumb: typeof import('./components/Breadcrumb/Breadcrumb.vue')['default']
+    ColSetting: typeof import('./components/ProTable/components/ColSetting.vue')['default']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -17,6 +18,7 @@ declare module '@vue/runtime-core' {
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
@@ -37,12 +39,21 @@ declare module '@vue/runtime-core' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTag: typeof import('element-plus/es')['ElTag']
     ElTree: typeof import('element-plus/es')['ElTree']
+    ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
+    Grid: typeof import('./components/Grid/index.vue')['default']
+    GridItem: typeof import('./components/Grid/components/GridItem.vue')['default']
     Hamburger: typeof import('./components/Hamburger/Hamburger.vue')['default']
+    Pagination: typeof import('./components/ProTable/components/Pagination.vue')['default']
+    ProTable: typeof import('./components/ProTable/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollBar: typeof import('./components/ScrollBar/ScrollBar.vue')['default']
+    SearchForm: typeof import('./components/SearchForm/index.vue')['default']
+    SearchFormItem: typeof import('./components/SearchForm/components/SearchFormItem.vue')['default']
     SvgIcon: typeof import('./components/SvgIcon/SvgIcon.vue')['default']
+    TableColumn: typeof import('./components/ProTable/components/TableColumn.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

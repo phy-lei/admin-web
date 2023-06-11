@@ -1,11 +1,12 @@
-import { UserListReqParams, UserListResponseData, ReqAuth, ReqParams, ResResult } from './model';
+import { UserListReqParams, UserListResponseData, ReqAuth, ReqParams, ResResult, UserListListItem } from './model';
 import { get, post } from '@/utils/http';
 
 enum URL {
   login = '/oauth-service/user/login',
   permission = '/v1/user/permission',
   userList = '/oauth-service/user/page',
-  updateStatus = '/oauth-service/user/status/update'
+  updateStatus = '/oauth-service/user/status/update',
+  updateAdmin = '/oauth-service/user/update',
 }
 
 export const login = async (data: ReqParams) => post<ResResult>({ url: URL.login, data });
@@ -16,7 +17,7 @@ export const fetchList = async (data: UserListReqParams) => post<UserListRespons
 
 export const createAdmin = async () => get<ReqAuth>({ url: URL.permission });
 
-export const updateAdmin = async (data: ReqParams) => post<any>({ url: URL.login, data });
+export const updateAdmin = async (data: UserListListItem) => post<any>({ url: URL.updateAdmin + `/${data.lqbId}`, data });
 
 export const updateStatus = async (data: {
   lqbId: number
