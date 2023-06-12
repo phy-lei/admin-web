@@ -1,12 +1,23 @@
 <template>
-  <el-config-provider :locale="locale">
-    <router-view />
+  <el-config-provider :locale="locale" :size="assemblySize" :button="buttonConfig">
+    <router-view></router-view>
   </el-config-provider>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, reactive, computed } from 'vue';
 import { ElConfigProvider } from 'element-plus';
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
+import { useGlobalStore } from '@/stores/modules/global';
+
+import zhCn from 'element-plus/es/locale/lang/zh-cn';
+
+const globalStore = useGlobalStore();
+
 const locale = ref(zhCn);
+
+// element assemblySize
+const assemblySize = computed(() => globalStore.assemblySize);
+
+// element button config
+const buttonConfig = reactive({ autoInsertSpace: false });
 </script>

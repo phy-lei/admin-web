@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useAppStore } from '@/store/app';
-import { useUserStore } from '@/store/user';
+import { useAppStore } from '@/stores/app';
+import { useUserStore } from '@/stores/user';
 
 const { sidebar, toggleSideBar } = useAppStore();
 const { avatar } = useUserStore();

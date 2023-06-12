@@ -1,5 +1,5 @@
 import { onMounted, onBeforeMount } from 'vue';
-import { useAppStore } from '@/store/app';
+import { useAppStore } from '@/stores/app';
 
 export default () => {
   const WIDTH = 1024

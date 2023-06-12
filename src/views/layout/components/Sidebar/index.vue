@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { computed, defineComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useAppStore } from '@/store/app';
+import { useAppStore } from '@/stores/app';
 import ScrollBar from '@/components/ScrollBar/ScrollBar.vue';
 
 export default defineComponent({

@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useAppStore } from '@/store/app';
+import { useAppStore } from '@/stores/app';
 import { Navbar, Sidebar } from './components';
 import useResize from './useHooks/useResize';
 
