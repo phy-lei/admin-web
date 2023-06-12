@@ -1,5 +1,9 @@
 <template>
-  <div>123</div>
+  <div>
+    <el-icon color="#409EFC" class="no-inherit">
+      <Share />
+    </el-icon>
+  </div>
 </template>
 
 <script lang="ts">
