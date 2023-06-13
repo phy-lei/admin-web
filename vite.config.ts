@@ -10,11 +10,14 @@ import proxy from './config/vite/proxy';
 
 const pathSrc = path.resolve(__dirname, 'src')
 
+const pathConfig = path.resolve(__dirname, 'config')
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
       '@': `${pathSrc}/`,
+      '@config': `${pathConfig}/`
     },
   },
   css: {
