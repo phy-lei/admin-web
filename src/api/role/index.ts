@@ -1,6 +1,6 @@
 import { ReqAuth, ReqParams, ResResult, AllRoleListItemDto } from './model';
 import { PORT1 } from '@/api/config/servicePort';
-import { get, post } from '@/utils/http';
+import http from '@/api';
 
 enum URL {
   login = '/user/login',
@@ -9,10 +9,16 @@ enum URL {
   allRoleList = '/role/listAll',
 }
 
+/**
+ * @name 角色模块
+ */
+export const getAllRoleListApi = async () =>
+  http.get<AllRoleListItemDto[]>(PORT1 + `/role/listAll`);
+
+export const createRole = async () => http.post<ReqAuth>({ url: PORT1 + URL.permission });
+
 export const fetchList = async (data: ReqParams) =>
   get<ResResult>({ url: PORT1 + URL.roleList, data });
-
-export const createRole = async () => get<ReqAuth>({ url: PORT1 + URL.permission });
 
 export const updateRole = async (data: ReqParams) =>
   get<ResResult>({ url: PORT1 + URL.login, data });
@@ -36,16 +42,3 @@ export const allocMenu = async (data: ReqParams) =>
 
 export const listMenuByRole = async (data: ReqParams) =>
   get<ResResult>({ url: PORT1 + URL.login, data });
-
-export default {
-  fetchList,
-  fetchAllRoleList,
-  createRole,
-  updateRole,
-  updateStatus,
-  deleteRole,
-  allocResource,
-  listResourceByRole,
-  allocMenu,
-  listMenuByRole,
-};

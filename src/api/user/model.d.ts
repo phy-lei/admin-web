@@ -92,47 +92,47 @@ interface ResponseDataListItemResourceListItem {
 
 export interface UserListListItem {
   /** 部门 */
-  departments?: ResponseDataListItemDepartmentsItem[]
+  departments: ResponseDataListItemDepartmentsItem[]
   /** 资源过滤 */
-  filterList?: string[]
+  filterList: string[]
   /** 最后登录时间 */
-  loginTime?: string
+  loginTime: string
   /** 家庭地址 */
-  lqbAddress?: string
+  lqbAddress: string
   /** 是否是管理员：1->是；0->否 */
-  lqbAdmin?: number
+  lqbAdmin: number
   /** 邮箱 */
-  lqbEmail?: string
+  lqbEmail: string
   /** 头像 */
-  lqbIcon?: string
-  lqbId?: number
+  lqbIcon: string
+  lqbId: number
   /** 手机号 */
-  lqbMobile?: string
+  lqbMobile: string
   /** 第二个手机号 */
-  lqbMobileTwo?: string
+  lqbMobileTwo: string
   /** 昵称 */
-  lqbNickName?: string
+  lqbNickName: string
   /** 排序字段 */
-  lqbOrderNum?: number
+  lqbOrderNum: number
   /** 平台id */
-  lqbPlatformId?: number
+  lqbPlatformId: number
   /** 用户来源：0->自填；1->管理员添加；2->微信；3：第三方 */
-  lqbSource?: number
+  lqbSource: number
   /** 座机号码 */
-  lqbTelephone?: string
+  lqbTelephone: string
   /** 帐号启用状态：1->启用；0->禁用 */
-  lqbUserStatus?: number
+  lqbUserStatus: number
   /** 用户名 */
-  lqbUsername?: string
+  lqbUsername: string
   /** 菜单 */
-  menuList?: ResponseDataListItemMenuListItem[]
+  menuList: ResponseDataListItemMenuListItem[]
   /** 资源 */
-  resourceList?: ResponseDataListItemResourceListItem[]
+  resourceList: ResponseDataListItemResourceListItem[]
   loading: boolean
 }
 
 export interface UserListResponseData {
-  list?: UserListListItem[]
+  list: UserListListItem[]
   pageNum?: number
   pageSize?: number
   total?: number

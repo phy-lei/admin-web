@@ -6,7 +6,7 @@ export interface ReqParams {
 export interface LoginDto {
   isLogin?: boolean
   loginDevice?: string
-  loginId?: Record<string, any>
+  loginId?: number
   loginType?: string
   sessionTimeout?: number
   tag?: string

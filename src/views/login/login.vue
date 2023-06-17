@@ -59,6 +59,7 @@ import { useUserStore } from '@/stores/modules/user';
 import { useTabsStore } from '@/stores/modules/tabs';
 import { useKeepAliveStore } from '@/stores/modules/keepAlive';
 import { loginApi } from '@/api/login';
+import { getCurrentUserInfoApi } from '@/api/user';
 import { initDynamicRouter } from '@/router/modules/dynamicRouter';
 import { HOME_URL } from '@/config';
 import { getTimeState } from '@/utils';
@@ -107,6 +108,8 @@ const handleLogin = () => {
           lqbPasswd: loginForm.password,
         });
         userStore.setToken(res.tokenValue);
+
+        const userInfo = await getCurrentUserInfoApi();
 
         // 2.添加动态路由
         await initDynamicRouter();
