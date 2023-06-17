@@ -1,23 +1,23 @@
-import path from 'path'
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import path from 'path';
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 
 import proxy from './config/vite/proxy';
 
-const pathSrc = path.resolve(__dirname, 'src')
+const pathSrc = path.resolve(__dirname, 'src');
 
-const pathConfig = path.resolve(__dirname, 'config')
+const pathConfig = path.resolve(__dirname, 'config');
 
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
       '@': `${pathSrc}/`,
-      '@config': `${pathConfig}/`
+      '~config': `${pathConfig}/`,
     },
   },
   css: {
@@ -44,9 +44,9 @@ export default defineConfig({
     }),
     createSvgIconsPlugin({
       // 指定需要缓存的图标文件夹
-      iconDirs: [path.resolve(process.cwd(), "src/icons/svg")],
+      iconDirs: [path.resolve(process.cwd(), 'src/icons/svg')],
       // 指定symbolId格式
-      symbolId: "icon-[dir]-[name]",
+      symbolId: 'icon-[dir]-[name]',
 
       /**
        * 自定义插入位置
@@ -60,11 +60,10 @@ export default defineConfig({
        */
       // customDomId: '__svg__icons__dom__',
     }),
-
   ],
 
   // server
   server: {
     proxy,
   },
-})
+});
