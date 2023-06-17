@@ -75,7 +75,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { fetchList, deleteProductCate, updateShowStatus, updateNavStatus } from '@/api/productCate'
 
-const data reactive({
+const data = reactive({
   list: null,
   total: null,
   listLoading: true,
@@ -100,7 +100,7 @@ function resetParentId() {
 function handleAddProductCate() {
   $router.push('/pms/addProductCate');
 }
-getList() {
+function getList() {
   listLoading = true;
   fetchList(parentId, listQuery).then(response => {
     listLoading = false;
@@ -172,32 +172,32 @@ function handleDelete(index, row) {
 }
 
 
-export default {
-  name: "productCateList",
+// export default {
+//   name: "productCateList",
 
-  watch: {
-    $route(route) {
-      resetParentId();
-      getList();
-    }
-  },
-  filters: {
-    levelFilter(value) {
-      if (value === 0) {
-        return '一级';
-      } else if (value === 1) {
-        return '二级';
-      }
-    },
-    disableNextLevel(value) {
-      if (value === 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-}
+//   watch: {
+//     $route(route) {
+//       resetParentId();
+//       getList();
+//     }
+//   },
+//   filters: {
+//     levelFilter(value) {
+//       if (value === 0) {
+//         return '一级';
+//       } else if (value === 1) {
+//         return '二级';
+//       }
+//     },
+//     disableNextLevel(value) {
+//       if (value === 0) {
+//         return false;
+//       } else {
+//         return true;
+//       }
+//     }
+//   }
+// }
 </script>
 
 <style scoped></style>

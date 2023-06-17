@@ -76,7 +76,7 @@ const defaultProductCate = {
   productAttributeIdList: []
 };
 
-const data reactive({
+const data =reactive({
 
   productCate: Object.assign({}, defaultProductCate),
   selectProductCateList: [],
@@ -229,26 +229,26 @@ function handleAddFilterAttr() {
   });
 }
 
-export default {
-  name: "ProductCateDetail",
-  components: { SingleUpload },
-  props: {
-    isEdit: {
-      type: Boolean,
-      default: false
-    }
-  },
+// export default {
+//   name: "ProductCateDetail",
+//   components: { SingleUpload },
+//   props: {
+//     isEdit: {
+//       type: Boolean,
+//       default: false
+//     }
+//   },
 
-  filters: {
-    filterLabelFilter(index) {
-      if (index === 0) {
-        return '筛选属性：';
-      } else {
-        return '';
-      }
-    }
-  }
-}
+//   filters: {
+//     filterLabelFilter(index) {
+//       if (index === 0) {
+//         return '筛选属性：';
+//       } else {
+//         return '';
+//       }
+//     }
+//   }
+// }
 </script>
 
 <style scoped></style>

@@ -119,22 +119,13 @@ function onSubmit(formName) {
       return false;
     }
   });
-},
+}
 function resetForm(formName) {
   $refs[formName].resetFields();
   brand = Object.assign({}, defaultBrand);
 }
 
-export default {
-  name: 'BrandDetail',
-  components: { SingleUpload },
-  props: {
-    isEdit: {
-      type: Boolean,
-      default: false
-    }
-  },
-}
+
 </script>
 <style></style>
 

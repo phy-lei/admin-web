@@ -128,13 +128,13 @@ function getList() {
     totalPage = response.data.totalPage;
     pageSize = response.data.pageSize;
   });
-},
+}
 function handleSelectionChange(val) {
   multipleSelection = val;
-},
+}
 function handleUpdate(index, row) {
   $router.push({ path: '/pms/updateBrand', query: { id: row.id } })
-},
+}
 function handleDelete(index, row) {
   $confirm('是否要删除该品牌', '提示', {
     confirmButtonText: '确定',
@@ -150,13 +150,13 @@ function handleDelete(index, row) {
       getList();
     });
   });
-},
+}
 function getProductList(index, row) {
   console.log(index, row);
-},
+}
 function getProductCommentList(index, row) {
   console.log(index, row);
-},
+}
 function handleFactoryStatusChange(index, row) {
   var data = new URLSearchParams();
   data.append("ids", row.id);
@@ -174,7 +174,7 @@ function handleFactoryStatusChange(index, row) {
       row.factoryStatus = 0;
     }
   });
-},
+}
 function handleShowStatusChange(index, row) {
   let data = new URLSearchParams();
   ;
@@ -193,20 +193,20 @@ function handleShowStatusChange(index, row) {
       row.showStatus = 0;
     }
   });
-},
+}
 function handleSizeChange(val) {
   listQuery.pageNum = 1;
   listQuery.pageSize = val;
   getList();
-},
+}
 function handleCurrentChange(val) {
   listQuery.pageNum = val;
   getList();
-},
+}
 function searchBrandList() {
   listQuery.pageNum = 1;
   getList();
-},
+}
 function handleBatchOperate() {
   console.log(multipleSelection);
   if (multipleSelection < 1) {
@@ -245,20 +245,12 @@ function handleBatchOperate() {
       duration: 1000
     });
   });
-},
+}
 function addBrand() {
   $router.push({ path: '/pms/addBrand' })
 }
 
-export default {
-  name: 'brandList',
-  created() {
-    getList();
-  },
-  methods: {
 
-  }
-}
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped></style>
 

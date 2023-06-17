@@ -68,7 +68,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { fetchList, deleteProductAttr } from '@/api/productAttr'
 
 
-const data reactive({
+const data= reactive({
   list: null,
   total: null,
   listLoading: true,
@@ -165,28 +165,28 @@ function handleDelete(index, row) {
 
 
 
-export default {
-  name: 'productAttrList',
+// export default {
+//   name: 'productAttrList',
 
-  filters: {
-    inputTypeFilter(value) {
-      if (value === 1) {
-        return '从列表中选取';
-      } else {
-        return '手工录入'
-      }
-    },
-    selectTypeFilter(value) {
-      if (value === 1) {
-        return '单选';
-      } else if (value === 2) {
-        return '多选';
-      } else {
-        return '唯一'
-      }
-    },
-  }
-}
+//   filters: {
+//     inputTypeFilter(value) {
+//       if (value === 1) {
+//         return '从列表中选取';
+//       } else {
+//         return '手工录入'
+//       }
+//     },
+//     selectTypeFilter(value) {
+//       if (value === 1) {
+//         return '单选';
+//       } else if (value === 2) {
+//         return '多选';
+//       } else {
+//         return '唯一'
+//       }
+//     },
+//   }
+// }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped></style>

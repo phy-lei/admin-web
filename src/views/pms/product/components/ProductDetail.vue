@@ -90,12 +90,10 @@ const defaultProductParam = {
   verifyStatus: 0,
   weight: 0
 };
-const data reactive({
-  return {
+const data = reactive({
     active: 0,
     productParam: Object.assign({}, defaultProductParam),
     showStatus: [true, false, false, false]
-  }
 })
 
 if (isEdit) {
@@ -152,19 +150,7 @@ function hideAll() {
     }
 
 
-// export default {
-//   name: 'ProductDetail',
-//   components: { ProductInfoDetail, ProductSaleDetail, ProductAttrDetail, ProductRelationDetail },
-//   props: {
-//     isEdit: {
-//       type: Boolean,
-//       default: false
-//     }
-//   },
-//   methods: {
-    
-//   }
-// }
+
 </script>
 <style>
 .form-container {

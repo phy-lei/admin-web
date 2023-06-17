@@ -74,58 +74,58 @@ function handleFinishCommit() {
 }
 
 
-export default {
-  name: "ProductRelationDetail",
-  props: {
-    value: Object,
-    isEdit: {
-      type: Boolean,
-      default: false
-    }
-  }
+// export default {
+//   name: "ProductRelationDetail",
+//   props: {
+//     value: Object,
+//     isEdit: {
+//       type: Boolean,
+//       default: false
+//     }
+//   }
 
-  computed: {
-    //选中的专题
-    selectSubject: {
-      get: function () {
-        let subjects = [];
-        if (value.subjectProductRelationList == null || value.subjectProductRelationList.length <= 0) {
-          return subjects;
-        }
-        for (let i = 0; i < value.subjectProductRelationList.length; i++) {
-          subjects.push(value.subjectProductRelationList[i].subjectId);
-        }
-        return subjects;
-      },
-      set: function (newValue) {
-        value.subjectProductRelationList = [];
-        for (let i = 0; i < newValue.length; i++) {
-          value.subjectProductRelationList.push({ subjectId: newValue[i] });
-        }
-      }
-    },
-    //选中的优选
-    selectPrefrenceArea: {
-      get: function () {
-        let prefrenceAreas = [];
-        if (value.prefrenceAreaProductRelationList == null || value.prefrenceAreaProductRelationList.length <= 0) {
-          return prefrenceAreas;
-        }
-        for (let i = 0; i < value.prefrenceAreaProductRelationList.length; i++) {
-          prefrenceAreas.push(value.prefrenceAreaProductRelationList[i].prefrenceAreaId);
-        }
-        return prefrenceAreas;
-      },
-      set: function (newValue) {
-        value.prefrenceAreaProductRelationList = [];
-        for (let i = 0; i < newValue.length; i++) {
-          value.prefrenceAreaProductRelationList.push({ prefrenceAreaId: newValue[i] });
-        }
-      }
-    }
-  }
+//   computed: {
+//     //选中的专题
+//     selectSubject: {
+//       get: function () {
+//         let subjects = [];
+//         if (value.subjectProductRelationList == null || value.subjectProductRelationList.length <= 0) {
+//           return subjects;
+//         }
+//         for (let i = 0; i < value.subjectProductRelationList.length; i++) {
+//           subjects.push(value.subjectProductRelationList[i].subjectId);
+//         }
+//         return subjects;
+//       },
+//       set: function (newValue) {
+//         value.subjectProductRelationList = [];
+//         for (let i = 0; i < newValue.length; i++) {
+//           value.subjectProductRelationList.push({ subjectId: newValue[i] });
+//         }
+//       }
+//     },
+//     //选中的优选
+//     selectPrefrenceArea: {
+//       get: function () {
+//         let prefrenceAreas = [];
+//         if (value.prefrenceAreaProductRelationList == null || value.prefrenceAreaProductRelationList.length <= 0) {
+//           return prefrenceAreas;
+//         }
+//         for (let i = 0; i < value.prefrenceAreaProductRelationList.length; i++) {
+//           prefrenceAreas.push(value.prefrenceAreaProductRelationList[i].prefrenceAreaId);
+//         }
+//         return prefrenceAreas;
+//       },
+//       set: function (newValue) {
+//         value.prefrenceAreaProductRelationList = [];
+//         for (let i = 0; i < newValue.length; i++) {
+//           value.prefrenceAreaProductRelationList.push({ prefrenceAreaId: newValue[i] });
+//         }
+//       }
+//     }
+//   }
 
-}
+// }
 </script>
 
 <style scoped></style>
