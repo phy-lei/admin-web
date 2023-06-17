@@ -139,10 +139,7 @@ export interface UserListResponseData {
   totalPage?: number
 }
 
-export interface ReqParams {
-  lqbUsername: string;
-  lqbPasswd: string;
-}
+
 
 export interface ReqAuth {
   auths: string[];
@@ -150,16 +147,3 @@ export interface ReqAuth {
   is_admin?: 0 | 1;
 }
 
-export interface ResResult {
-  isLogin?: boolean
-  loginDevice?: string
-  loginId?: Record<string, any>
-  loginType?: string
-  sessionTimeout?: number
-  tag?: string
-  tokenActivityTimeout?: number
-  tokenName?: string
-  tokenSessionTimeout?: number
-  tokenTimeout?: number
-  tokenValue: string
-}

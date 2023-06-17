@@ -8,7 +8,6 @@ import axios, {
 import { showFullScreenLoading, tryHideFullScreenLoading } from '@/config/serviceLoading';
 import { LOGIN_URL } from '@/config';
 import { ElMessage } from 'element-plus';
-import { ResultData } from '@/api/interface';
 import { ResultEnum } from '@/enums/httpEnum';
 import { checkStatus } from './helper/checkStatus';
 import { useUserStore } from '@/stores/modules/user';
@@ -68,16 +67,16 @@ class RequestHttp {
         if (data.code == ResultEnum.OVERDUE) {
           userStore.setToken('');
           // router.replace(LOGIN_URL);
-          ElMessage.error(data.msg);
+          ElMessage.error(data.message);
           return Promise.reject(data);
         }
         // 全局错误信息拦截（防止下载文件的时候返回数据流，没有 code 直接报错）
         if (data.code && data.code !== ResultEnum.SUCCESS) {
-          ElMessage.error(data.msg);
+          ElMessage.error(data.message);
           return Promise.reject(data);
         }
         // 成功请求（在页面上除非特殊情况，否则不用处理失败逻辑）
-        return data;
+        return data.data;
       },
       async (error: AxiosError) => {
         const { response } = error;
@@ -98,16 +97,16 @@ class RequestHttp {
   /**
    * @description 常用请求方法封装
    */
-  get<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+  get<T>(url: string, params?: object, _object = {}): Promise<T> {
     return this.service.get(url, { params, ..._object });
   }
-  post<T>(url: string, params?: object | string, _object = {}): Promise<ResultData<T>> {
+  post<T>(url: string, params?: object | string, _object = {}): Promise<T> {
     return this.service.post(url, params, _object);
   }
-  put<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+  put<T>(url: string, params?: object, _object = {}): Promise<T> {
     return this.service.put(url, params, _object);
   }
-  delete<T>(url: string, params?: any, _object = {}): Promise<ResultData<T>> {
+  delete<T>(url: string, params?: any, _object = {}): Promise<T> {
     return this.service.delete(url, { params, ..._object });
   }
   download(url: string, params?: object, _object = {}): Promise<BlobPart> {

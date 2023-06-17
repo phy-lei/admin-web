@@ -2,10 +2,10 @@
   <div>
     <el-card class="login-form-layout">
       <el-form
-        autoComplete="on"
+        ref="form"
+        auto-complete="on"
         :model="loginForm"
         :rules="loginRules"
-        ref="form"
         label-position="left"
       >
         <div style="text-align: center">
@@ -17,10 +17,10 @@
         <h2 class="login-title color-main">mall-admin-web</h2>
         <el-form-item prop="username">
           <el-input
+            v-model="loginForm.username"
             name="username"
             type="text"
-            v-model="loginForm.username"
-            autoComplete="on"
+            auto-complete="on"
             placeholder="请输入用户名"
           >
             <span slot="prefix">
@@ -30,10 +30,10 @@
         </el-form-item>
         <el-form-item prop="password">
           <el-input
+            v-model="loginForm.password"
             name="password"
             type="password"
-            v-model="loginForm.password"
-            autoComplete="on"
+            auto-complete="on"
             placeholder="请输入密码"
           >
             <span slot="prefix">
@@ -42,12 +42,7 @@
           </el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px; text-align: center">
-          <el-button
-            style="width: 45%"
-            type="primary"
-            :loading="loading"
-            @click.native.prevent="handleLogin"
-          >
+          <el-button style="width: 45%" type="primary" :loading="loading" @click="handleLogin">
             登录
           </el-button>
         </el-form-item>
@@ -59,10 +54,20 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/user';
+import { ElNotification } from 'element-plus';
+import { useUserStore } from '@/stores/modules/user';
+import { useTabsStore } from '@/stores/modules/tabs';
+import { useKeepAliveStore } from '@/stores/modules/keepAlive';
+import { loginApi } from '@/api/login';
+import { initDynamicRouter } from '@/router/modules/dynamicRouter';
+import { HOME_URL } from '@/config';
+import { getTimeState } from '@/utils';
 
-const store = useUserStore();
 const router = useRouter();
+const userStore = useUserStore();
+const tabsStore = useTabsStore();
+const keepAliveStore = useKeepAliveStore();
+
 const loginForm = reactive({
   username: '',
   password: '',
@@ -94,38 +99,34 @@ const loginRules = {
 const handleLogin = () => {
   form.value.validate(async (valid: any) => {
     if (valid) {
-      // let isSupport = getSupport();
-      // if(isSupport===undefined||isSupport==null){
-      //   this.dialogVisible =true;
-      //   return;
-      // }
       loading.value = true;
-
-      store
-        .login({
+      try {
+        // 1.执行登录接口
+        const res = await loginApi({
           lqbUsername: loginForm.username,
           lqbPasswd: loginForm.password,
-        })
-        .then((res) => {
-          console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', res);
-          if (res) {
-            router.push({ name: 'home' });
-          }
-        })
-        .finally(() => {
-          loading.value = false;
         });
-      // this.$store
-      //   .dispatch('Login', this.loginForm)
-      //   .then(() => {
-      //     this.loading = false;
-      //     setCookie('username', this.loginForm.username, 15);
-      //     setCookie('password', this.loginForm.password, 15);
-      //     this.$router.push({ path: '/' });
-      //   })
-      //   .catch(() => {
-      //     this.loading = false;
-      //   });
+        userStore.setToken(res.tokenValue);
+
+        // 2.添加动态路由
+        await initDynamicRouter();
+
+        // 3.清空 tabs、keepAlive 数据
+        tabsStore.closeMultipleTab();
+        keepAliveStore.setKeepAliveName();
+
+        // 4.跳转到首页
+        router.push(HOME_URL);
+
+        ElNotification({
+          title: getTimeState(),
+          message: '欢迎登录lqb',
+          type: 'success',
+          duration: 3000,
+        });
+      } finally {
+        loading.value = false;
+      }
     } else {
       console.log('参数验证不合法！');
       return false;

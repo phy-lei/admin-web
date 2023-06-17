@@ -1,22 +1,22 @@
-import router from "@/router";
-import { defineStore } from "pinia";
-import { TabsState, TabsMenuProps } from "@/stores/interface";
-import piniaPersistConfig from "@/config/piniaPersist";
+import router from '@/router';
+import { defineStore } from 'pinia';
+import { TabsState, TabsMenuProps } from '@/stores/interface';
+import piniaPersistConfig from '@/config/piniaPersist';
 
 export const useTabsStore = defineStore({
-  id: "geeker-tabs",
+  id: 'geeker-tabs',
   state: (): TabsState => ({
-    tabsMenuList: []
+    tabsMenuList: [],
   }),
   actions: {
     // Add Tabs
     async addTabs(tabItem: TabsMenuProps) {
-      if (this.tabsMenuList.every(item => item.path !== tabItem.path)) {
+      if (this.tabsMenuList.every((item) => item.path !== tabItem.path)) {
         this.tabsMenuList.push(tabItem);
       }
     },
     // Remove Tabs
-    async removeTabs(tabPath: string, isCurrent: boolean = true) {
+    async removeTabs(tabPath: string, isCurrent = true) {
       const tabsMenuList = this.tabsMenuList;
       if (isCurrent) {
         tabsMenuList.forEach((item, index) => {
@@ -26,11 +26,11 @@ export const useTabsStore = defineStore({
           router.push(nextTab.path);
         });
       }
-      this.tabsMenuList = tabsMenuList.filter(item => item.path !== tabPath);
+      this.tabsMenuList = tabsMenuList.filter((item) => item.path !== tabPath);
     },
     // Close MultipleTab
     async closeMultipleTab(tabsMenuValue?: string) {
-      this.tabsMenuList = this.tabsMenuList.filter(item => {
+      this.tabsMenuList = this.tabsMenuList.filter((item) => {
         return item.path === tabsMenuValue || !item.close;
       });
     },
@@ -41,10 +41,10 @@ export const useTabsStore = defineStore({
     // Set Tabs Title
     async setTabsTitle(title: string) {
       const nowFullPath = location.hash.substring(1);
-      this.tabsMenuList.forEach(item => {
+      this.tabsMenuList.forEach((item) => {
         if (item.path == nowFullPath) item.title = title;
       });
-    }
+    },
   },
-  persist: piniaPersistConfig("geeker-tabs")
+  persist: piniaPersistConfig('geeker-tabs'),
 });

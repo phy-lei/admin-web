@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { API_PREFIX } from '../../config/constant';
 import { getToken } from './auth';
 // import { useUserStoreWithOut } from '../store/modules/user';
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
 
 interface ResData<T> {
   code: number;
@@ -45,7 +45,7 @@ instance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 instance.interceptors.response.use(
@@ -55,8 +55,8 @@ instance.interceptors.response.use(
     if (res.code === 200) {
       return res.data || true;
     } else if (res.code === 401 || res.code === 403) {
-      ElMessage.error('没有操作权限')
-      window.location.href = '/#/login'
+      ElMessage.error('没有操作权限');
+      window.location.href = '/#/login';
 
       return;
     }
@@ -73,19 +73,18 @@ instance.interceptors.response.use(
     if (error === '没有操作权限') return;
     ElMessage.error('网络超时，稍后再试吧');
     throw new Error('error');
-  },
+  }
 );
 
 const request = async <T = any>(
   config: AxiosRequestConfig | string,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<T> => {
   if (typeof config === 'string') {
     if (!options) {
       return instance.request<T, T>({
         url: config,
       });
-
     } else {
       return instance.request<T, T>({
         url: config,
@@ -95,16 +94,17 @@ const request = async <T = any>(
   } else {
     return instance.request<T, T>(config);
   }
-
-
 };
-export async function get<T = any>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> {
+export async function get<T = any>(
+  config: AxiosRequestConfig,
+  options?: AxiosRequestConfig
+): Promise<T> {
   return request({ ...config, method: 'GET' }, options);
 }
 
 export async function post<T = any>(
   config: AxiosRequestConfig,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig
 ): Promise<T> {
   return request({ ...config, method: 'POST' }, options);
 }

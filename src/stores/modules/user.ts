@@ -1,23 +1,24 @@
-import { defineStore } from "pinia";
-import { UserState } from "@/stores/interface";
-import piniaPersistConfig from "@/config/piniaPersist";
+import { defineStore } from 'pinia';
+import { UserState } from '@/stores/interface';
+import piniaPersistConfig from '@/config/piniaPersist';
 
 export const useUserStore = defineStore({
-  id: "geeker-user",
+  id: 'lqb-user',
   state: (): UserState => ({
-    token: "",
-    userInfo: { name: "Geeker" }
+    token: '',
+    userInfo: { name: 'Geeker' },
   }),
   getters: {},
   actions: {
     // Set Token
     setToken(token: string) {
+      console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', token);
       this.token = token;
     },
     // Set setUserInfo
-    setUserInfo(userInfo: UserState["userInfo"]) {
+    setUserInfo(userInfo: UserState['userInfo']) {
       this.userInfo = userInfo;
-    }
+    },
   },
-  persist: piniaPersistConfig("geeker-user")
+  persist: piniaPersistConfig('lqb-user'),
 });

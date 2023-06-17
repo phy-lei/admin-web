@@ -1,44 +1,29 @@
-import { UserListReqParams, UserListResponseData, ReqAuth, ReqParams, ResResult, UserListListItem } from './model';
-import { get, post } from '@/utils/http';
+import { UserListReqParams, UserListResponseData, ReqAuth, UserListListItem } from './model';
 
-enum URL {
-  login = '/oauth-service/user/login',
-  permission = '/v1/user/permission',
-  userList = '/oauth-service/user/page',
-  updateStatus = '/oauth-service/user/status/update',
-  updateAdmin = '/oauth-service/user/update',
-}
+import http from '@/api';
+import { PORT1 } from '@/api/config/servicePort';
 
-export const login = async (data: ReqParams) => post<ResResult>({ url: URL.login, data });
+/**
+ * @name 用户管理模块
+ */
 
-export const permission = async () => get<ReqAuth>({ url: URL.permission });
+export const fetchListApi = async (params: UserListReqParams) =>
+  http.post<UserListResponseData>(PORT1 + `/user/page`, params);
 
-export const fetchList = async (data: UserListReqParams) => post<UserListResponseData>({ url: URL.userList, data });
+// todo
+export const createAdminApi = async () => http.get<ReqAuth>(PORT1 + `/user/page`);
 
-export const createAdmin = async () => get<ReqAuth>({ url: URL.permission });
+export const updateAdminApi = async (params: UserListListItem) =>
+  http.post<any>(PORT1 + `/user/update/${params.lqbId}`, params);
 
-export const updateAdmin = async (data: UserListListItem) => post<any>({ url: URL.updateAdmin + `/${data.lqbId}`, data });
+export const updateStatusApi = async (params: { lqbId: number; lqbStatus: number }) =>
+  http.post<ReqAuth>(PORT1 + `status/update`, params);
 
-export const updateStatus = async (data: {
-  lqbId: number
-  lqbStatus: number
-}) => post<ReqAuth>({ url: URL.updateStatus, data });
+export const deleteAdminApi = async (params: { lqbId: number; lqbStatus: number }) =>
+  http.post<ReqAuth>(PORT1 + `status/update`, params);
 
-export const deleteAdmin = async (data: ReqParams) => post<any>({ url: URL.login, data });
+export const getRoleByAdminApi = async (params: { lqbId: number; lqbStatus: number }) =>
+  http.post<ReqAuth>(PORT1 + `status/update`, params);
 
-export const getRoleByAdmin = async () => get<ReqAuth>({ url: URL.permission });
-
-export const allocRole = async (data: ReqParams) => post<any>({ url: URL.login, data });
-
-
-export default {
-  login,
-  permission,
-  fetchList,
-  createAdmin,
-  updateAdmin,
-  updateStatus,
-  deleteAdmin,
-  getRoleByAdmin,
-  allocRole,
-};
+export const allocRoleApi = async (params: { lqbId: number; lqbStatus: number }) =>
+  http.post<ReqAuth>(PORT1 + `status/update`, params);

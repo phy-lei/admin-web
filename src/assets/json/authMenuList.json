@@ -6,7 +6,7 @@
       "name": "ums",
       "redirect": "/ums/admin",
       "meta": {
-        "icon": "ums",
+        "icon": "Lock",
         "title": "权限",
         "isLink": "",
         "isHide": false,
@@ -20,7 +20,7 @@
           "name": "admin",
           "component": "/ums/admin/index",
           "meta": {
-            "icon": "ums-admin",
+            "icon": "Menu",
             "title": "用户列表",
             "isLink": "",
             "isHide": false,
@@ -34,7 +34,7 @@
           "name": "role",
           "component": "/ums/role/index",
           "meta": {
-            "icon": "ums-role",
+            "icon": "Menu",
             "title": "角色列表",
             "isLink": "",
             "isHide": false,
@@ -76,7 +76,7 @@
           "name": "menu",
           "component": "/ums/menu/index",
           "meta": {
-            "icon": "ums-menu",
+            "icon": "Menu",
             "title": "菜单列表",
             "isLink": "",
             "isHide": false,
@@ -118,7 +118,7 @@
           "name": "resource",
           "component": "/ums/resource/index",
           "meta": {
-            "icon": "ums-resource",
+            "icon": "Menu",
             "title": "资源列表",
             "isLink": "",
             "isHide": false,

@@ -1,5 +1,5 @@
 <template>
-  <ProTable ref="proTable" :columns="columns" :requestApi="fetchList">
+  <ProTable ref="proTable" :columns="columns" :request-api="fetchListApi">
     <!-- 表格 header 按钮 -->
     <template #tableHeader>
       <el-button type="primary" plain @click="handleAdd">添加</el-button>
@@ -28,11 +28,11 @@
   </ProTable>
 
   <el-dialog
-    :title="data.isEdit ? '编辑用户' : '添加用户'"
     v-model="data.dialogVisible"
+    :title="data.isEdit ? '编辑用户' : '添加用户'"
     width="50%"
   >
-    <el-form :model="data.admin" ref="adminForm" label-width="150px" :inline="true">
+    <el-form ref="adminForm" :model="data.admin" label-width="150px" :inline="true">
       <el-form-item label="用户名称：">
         <el-input v-model="data.admin.lqbNickName" style="width: 250px"></el-input>
       </el-form-item>
@@ -85,7 +85,7 @@
       </span>
     </template>
   </el-dialog>
-  <el-dialog title="分配角色" v-model="data.allocDialogVisible" width="30%">
+  <el-dialog v-model="data.allocDialogVisible" title="分配角色" width="30%">
     <el-select
       v-model="data.allocRoleIds"
       multiple
@@ -100,10 +100,12 @@
         :value="item.id"
       ></el-option>
     </el-select>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="data.allocDialogVisible = false" size="small">取 消</el-button>
-      <el-button type="primary" @click="handleAllocDialogConfirm()" size="small">确 定</el-button>
-    </span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button size="small" @click="data.allocDialogVisible = false">取 消</el-button>
+        <el-button type="primary" size="small" @click="handleAllocDialogConfirm()">确 定</el-button>
+      </span>
+    </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
@@ -112,22 +114,17 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import ProTable from '@/components/ProTable/index.vue';
 import { ColumnProps } from '@/components/ProTable/interface';
 import {
-  fetchList,
-  createAdmin,
-  updateAdmin,
-  updateStatus,
-  deleteAdmin,
-  getRoleByAdmin,
-  allocRole,
+  fetchListApi,
+  createAdminApi,
+  updateAdminApi,
+  updateStatusApi,
+  deleteAdminApi,
+  getRoleByAdminApi,
+  allocRoleApi,
 } from '@/api/user';
 
 import { fetchAllRoleList } from '@/api/role';
 
-const defaultListQuery = {
-  pageNum: 1,
-  pageSize: 20,
-  keyword: '',
-};
 const defaultAdmin = {
   id: null,
   username: null,
@@ -257,7 +254,7 @@ function handleStatusChange(row) {
     type: 'warning',
   })
     .then(() => {
-      updateStatus({
+      updateStatusApi({
         lqbId: row.lqbId,
         lqbStatus: 1 ^ row.lqbUserStatus,
       })
@@ -286,7 +283,7 @@ function handleDelete(index, row) {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    deleteAdmin(row.id).then((response) => {
+    deleteAdminApi(row.id).then((response) => {
       ElMessage({
         type: 'success',
         message: '删除成功!',
@@ -308,7 +305,7 @@ function handleDialogConfirm() {
     type: 'warning',
   }).then(() => {
     if (data.isEdit) {
-      updateAdmin(data.admin).then((response) => {
+      updateAdminApi(data.admin).then((response) => {
         ElMessage({
           message: '修改成功！',
           type: 'success',
@@ -317,7 +314,7 @@ function handleDialogConfirm() {
         proTable.value?.getTableList();
       });
     } else {
-      createAdmin(data.admin).then((response) => {
+      createAdminApi(data.admin).then((response) => {
         ElMessage({
           message: '添加成功！',
           type: 'success',
@@ -337,7 +334,7 @@ function handleAllocDialogConfirm() {
     let params = new URLSearchParams();
     params.append('adminId', data.allocAdminId);
     params.append('roleIds', data.allocRoleIds);
-    allocRole(params).then((response) => {
+    allocRoleApi(params).then((response) => {
       ElMessage({
         message: '分配成功！',
         type: 'success',
@@ -358,7 +355,7 @@ function getAllRoleList() {
   });
 }
 function getRoleListByAdmin(adminId) {
-  getRoleByAdmin(adminId).then((response) => {
+  getRoleByAdminApi(adminId).then((response) => {
     let allocRoleList = response.data;
     data.allocRoleIds = [];
     if (allocRoleList != null && allocRoleList.length > 0) {
