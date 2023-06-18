@@ -1,13 +1,4 @@
 
-export interface UserListReqParams {
-  /** 搜索值 */
-  keyword?: string
-  /** 分页数 */
-  pageNum?: number
-  /** 分页大小 */
-  pageSize?: number
-}
-
 interface ResponseDataListItemDepartmentsItem {
   /** 创建时间 */
   lqbCreateTime?: string
@@ -131,19 +122,9 @@ export interface UserListListItem {
   loading: boolean
 }
 
-export interface UserListResponseData {
-  list: UserListListItem[]
-  pageNum?: number
-  pageSize?: number
-  total?: number
-  totalPage?: number
-}
 
 
 
-export interface ReqAuth {
-  auths: string[];
-  modules: string[];
-  is_admin?: 0 | 1;
-}
+
+
 

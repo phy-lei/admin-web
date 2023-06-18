@@ -1,13 +1,7 @@
-import { ReqAuth, ReqParams, ResResult, AllRoleListItemDto } from './model';
-import { PORT1 } from '@/api/config/servicePort';
+import { AllRoleListItemDto, RoleListItemDto } from './model';
+import { ReqPage, ResPage } from '@/api/interface';
 import http from '@/api';
-
-enum URL {
-  login = '/user/login',
-  permission = '/v1/user/permission',
-  roleList = '/role/listAll',
-  allRoleList = '/role/listAll',
-}
+import { PORT1 } from '@/api/config/servicePort';
 
 /**
  * @name 角色模块
@@ -15,30 +9,26 @@ enum URL {
 export const getAllRoleListApi = async () =>
   http.get<AllRoleListItemDto[]>(PORT1 + `/role/listAll`);
 
-export const createRole = async () => http.post<ReqAuth>({ url: PORT1 + URL.permission });
+export const getRoleListApi = async (params: ReqPage) =>
+  http.get<ResPage<RoleListItemDto[]>>(PORT1 + `/role/list`, params);
 
-export const fetchList = async (data: ReqParams) =>
-  get<ResResult>({ url: PORT1 + URL.roleList, data });
+export const createRoleApi = async (params: RoleListItemDto) =>
+  http.post(PORT1 + `/role/create`, params);
 
-export const updateRole = async (data: ReqParams) =>
-  get<ResResult>({ url: PORT1 + URL.login, data });
+export const updateRoleApi = async (params: RoleListItemDto) =>
+  http.post(PORT1 + `/role/update/${params.lqbId}`, params);
 
-export const updateStatus = async () => get<ReqAuth>({ url: PORT1 + URL.permission });
+export const updateRoleStatusApi = async (params: { id: number; status: number }) =>
+  http.post(PORT1 + `/role/updateStatus/${params.id}?status=${params.status}`);
 
-export const deleteRole = async (data: ReqParams) =>
-  get<ResResult>({ url: PORT1 + URL.login, data });
+export const deleteRoleApi = async (params: number[]) => http.post(PORT1 + `/role/delete`, params);
 
-export const fetchAllRoleList = async () =>
-  get<AllRoleListItemDto[]>({ url: PORT1 + URL.allRoleList });
+export const fetchAllRoleList = async (params: ReqPage) => http.get(PORT1 + `/role/list`, params);
 
-export const allocResource = async (data: ReqParams) =>
-  get<ResResult>({ url: PORT1 + URL.login, data });
+export const allocResource = async (params: ReqPage) => http.get(PORT1 + `/role/list`, params);
 
-export const listResourceByRole = async (data: ReqParams) =>
-  get<ResResult>({ url: PORT1 + URL.login, data });
+export const listResourceByRole = async (params: ReqPage) => http.get(PORT1 + `/role/list`, params);
 
-export const allocMenu = async (data: ReqParams) =>
-  get<ResResult>({ url: PORT1 + URL.login, data });
+export const allocMenu = async (params: ReqPage) => http.get(PORT1 + `/role/list`, params);
 
-export const listMenuByRole = async (data: ReqParams) =>
-  get<ResResult>({ url: PORT1 + URL.login, data });
+export const listMenuByRole = async (params: ReqPage) => http.get(PORT1 + `/role/list`, params);

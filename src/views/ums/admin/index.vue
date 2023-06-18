@@ -1,118 +1,122 @@
 <template>
-  <ProTable ref="proTable" :columns="columns" :request-api="fetchListApi">
-    <!-- 表格 header 按钮 -->
-    <template #tableHeader>
-      <el-button type="primary" plain @click="handleAdd">添加</el-button>
-    </template>
+  <div>
+    <ProTable ref="proTable" :columns="columns" :request-api="fetchListApi">
+      <!-- 表格 header 按钮 -->
+      <template #tableHeader>
+        <el-button type="primary" plain @click="handleAdd">添加</el-button>
+      </template>
 
-    <!-- 用户状态 slot -->
-    <template #lqbUserStatus="scope">
-      <!-- 如果插槽的值为 el-switch，第一次加载会默认触发 switch 的 @change 方法，所有在外层包一个盒子，点击触发盒子 click 方法（暂时只能这样解决） -->
-      <div @click="handleStatusChange(scope.row)">
-        <el-switch
-          :value="scope.row.lqbUserStatus"
-          :active-text="scope.row.lqbUserStatus === 1 ? '启用' : '禁用'"
-          :active-value="1"
-          :inactive-value="0"
-        />
-      </div>
-    </template>
-    <!-- 表格操作 -->
-    <template #operation="scope">
-      <el-button type="primary" @click="handleSelectRole(scope.row)">分配角色</el-button>
-      <el-button type="primary" @click="handleUpdate(scope.row)">编辑</el-button>
-      <el-button type="primary" @click="handleDelete(scope.row)">删除</el-button>
-    </template>
-  </ProTable>
+      <!-- 用户状态 slot -->
+      <template #lqbUserStatus="scope">
+        <!-- 如果插槽的值为 el-switch，第一次加载会默认触发 switch 的 @change 方法，所有在外层包一个盒子，点击触发盒子 click 方法（暂时只能这样解决） -->
+        <div @click="handleStatusChange(scope.row)">
+          <el-switch
+            :value="scope.row.lqbUserStatus"
+            :active-text="scope.row.lqbUserStatus === 1 ? '启用' : '禁用'"
+            :active-value="1"
+            :inactive-value="0"
+          />
+        </div>
+      </template>
+      <!-- 表格操作 -->
+      <template #operation="scope">
+        <el-button type="primary" @click="handleSelectRole(scope.row)">分配角色</el-button>
+        <el-button type="primary" @click="handleUpdate(scope.row)">编辑</el-button>
+        <el-button type="primary" @click="handleDelete(scope.row)">删除</el-button>
+      </template>
+    </ProTable>
 
-  <el-dialog
-    v-model="data.dialogVisible"
-    :title="data.isEdit ? '编辑用户' : '添加用户'"
-    width="50%"
-  >
-    <el-form
-      ref="ruleFormRef"
-      :model="data.admin"
-      label-width="150px"
-      :inline="true"
-      :rules="rules"
+    <el-dialog
+      v-model="data.dialogVisible"
+      :title="data.isEdit ? '编辑用户' : '添加用户'"
+      width="50%"
     >
-      <el-form-item label="用户名称：" prop="lqbNickName">
-        <el-input v-model="data.admin.lqbNickName" style="width: 250px"></el-input>
-      </el-form-item>
-      <el-form-item label="归属部门：" prop="departments">
-        <el-tree-select
-          v-model="data.admin.departments"
-          :data="departmentsList"
-          check-strictly
-          :render-after-expand="false"
-          multiple
-        />
-      </el-form-item>
-      <el-form-item label="手机号码：" prop="lqbMobile">
-        <el-input v-model="data.admin.lqbMobile" style="width: 250px"></el-input>
-      </el-form-item>
-      <el-form-item label="邮箱：" prop="lqbEmail">
-        <el-input v-model="data.admin.lqbEmail" style="width: 250px"></el-input>
-      </el-form-item>
+      <el-form
+        ref="ruleFormRef"
+        :model="data.admin"
+        label-width="150px"
+        :inline="true"
+        :rules="rules"
+      >
+        <el-form-item label="用户名称：" prop="lqbNickName">
+          <el-input v-model="data.admin.lqbNickName" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="归属部门：" prop="departments">
+          <el-tree-select
+            v-model="data.admin.departments"
+            :data="departmentsList"
+            check-strictly
+            :render-after-expand="false"
+            multiple
+          />
+        </el-form-item>
+        <el-form-item label="手机号码：" prop="lqbMobile">
+          <el-input v-model="data.admin.lqbMobile" style="width: 250px"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱：" prop="lqbEmail">
+          <el-input v-model="data.admin.lqbEmail" style="width: 250px"></el-input>
+        </el-form-item>
 
-      <el-form-item label="登录帐号：" prop="lqbUsername" required>
-        <el-input
-          v-model="data.admin.lqbUsername"
-          style="width: 250px"
-          :disabled="data.isEdit"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="登录密码：" prop="lqbPasswd" required>
-        <el-input
-          v-model="data.admin.lqbPasswd"
-          style="width: 250px"
-          :disabled="data.isEdit"
-          type="password"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="是否启用：" prop="lqbUserStatus">
-        <el-radio-group v-model="data.admin.lqbUserStatus">
-          <el-radio :label="1">是</el-radio>
-          <el-radio :label="0">否</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="性别：" prop="lqbGender">
-        <el-radio-group v-model="data.admin.lqbGender">
-          <el-radio :label="1">男</el-radio>
-          <el-radio :label="0">女</el-radio>
-        </el-radio-group>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="data.dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleDialogConfirm">确 定</el-button>
-      </span>
-    </template>
-  </el-dialog>
-  <el-dialog v-model="data.allocDialogVisible" title="分配角色" width="30%">
-    <el-select
-      v-model="data.allocRoleIds"
-      multiple
-      placeholder="请选择"
-      size="small"
-      style="width: 80%"
-    >
-      <el-option
-        v-for="item in data.allRoleList"
-        :key="item.id"
-        :label="item.name"
-        :value="item.id"
-      ></el-option>
-    </el-select>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button size="small" @click="data.allocDialogVisible = false">取 消</el-button>
-        <el-button type="primary" size="small" @click="handleAllocDialogConfirm()">确 定</el-button>
-      </span>
-    </template>
-  </el-dialog>
+        <el-form-item label="登录帐号：" prop="lqbUsername" required>
+          <el-input
+            v-model="data.admin.lqbUsername"
+            style="width: 250px"
+            :disabled="data.isEdit"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="登录密码：" prop="lqbPasswd" required>
+          <el-input
+            v-model="data.admin.lqbPasswd"
+            style="width: 250px"
+            :disabled="data.isEdit"
+            type="password"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用：" prop="lqbUserStatus">
+          <el-radio-group v-model="data.admin.lqbUserStatus">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="性别：" prop="lqbGender">
+          <el-radio-group v-model="data.admin.lqbGender">
+            <el-radio :label="1">男</el-radio>
+            <el-radio :label="0">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="data.dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleDialogConfirm">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog v-model="data.allocDialogVisible" title="分配角色" width="30%">
+      <el-select
+        v-model="data.allocRoleIds"
+        multiple
+        placeholder="请选择"
+        size="small"
+        style="width: 80%"
+      >
+        <el-option
+          v-for="item in data.allRoleList"
+          :key="item.lqbId"
+          :label="item.lqbRoleName"
+          :value="item.lqbId"
+        ></el-option>
+      </el-select>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button size="small" @click="data.allocDialogVisible = false">取 消</el-button>
+          <el-button type="primary" size="small" @click="handleAllocDialogConfirm()">
+            确 定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
@@ -125,8 +129,8 @@ import {
   updateAdminApi,
   updateStatusApi,
   deleteAdminApi,
-  getRoleByAdminApi,
   allocRoleApi,
+  getRoleByIdApi,
 } from '@/api/user';
 
 import { getAllRoleListApi } from '@/api/role';
@@ -327,7 +331,7 @@ async function handleDialogConfirm() {
   });
 }
 function handleAllocDialogConfirm() {
-  allocRoleApi({ roleIds: data.allocRoleIds }).then(() => {
+  allocRoleApi(data.allocAdminId, data.allocRoleIds).then(() => {
     ElMessage({
       message: '分配成功！',
       type: 'success',
@@ -336,29 +340,20 @@ function handleAllocDialogConfirm() {
   });
 }
 
-function handleSelectRole(row: ListItem[number]) {
+async function handleSelectRole(row: ListItem[number]) {
+  const res = await getRoleByIdApi(row.lqbId);
+
   data.allocAdminId = row.lqbId;
   data.allocDialogVisible = true;
+  console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', res);
   // todo 回显角色id
-  // data.allocRoleIds = row.roleList;
+  data.allocRoleIds = res.map((item) => item.lqbId);
   // getRoleListByAdmin(row.id);
 }
 
 function getAllRoleList() {
   getAllRoleListApi().then((response) => {
     data.allRoleList = response;
-  });
-}
-
-function getRoleListByAdmin(adminId) {
-  getRoleByAdminApi(adminId).then((response) => {
-    let allocRoleList = response.data;
-    data.allocRoleIds = [];
-    if (allocRoleList != null && allocRoleList.length > 0) {
-      for (let i = 0; i < allocRoleList.length; i++) {
-        data.allocRoleIds.push(allocRoleList[i].id);
-      }
-    }
   });
 }
 </script>

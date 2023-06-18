@@ -33,12 +33,6 @@ export const initDynamicRouter = async () => {
       return Promise.reject('No permission');
     }
 
-    console.log(
-      '%c [ authStore.flatMenuListGet ]',
-      'font-size:13px; background:pink; color:#bf2c9f;',
-      authStore.flatMenuListGet
-    );
-
     // 3.添加动态路由
     authStore.flatMenuListGet.forEach((item) => {
       item.children && delete item.children;

@@ -56,7 +56,6 @@ const props = withDefaults(defineProps<ProTableProps>(), {
   columns: () => [],
   searchParam: () => ({}),
 });
-console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', props.columns);
 // 获取响应式设置
 const getResponsive = (item: ColumnProps) => {
   return {

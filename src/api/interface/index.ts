@@ -15,12 +15,14 @@ export interface ResPage<T> {
   pageNum: number;
   pageSize: number;
   total: number;
+  totalPage: number;
 }
 
 // 分页请求参数
 export interface ReqPage {
   pageNum: number;
   pageSize: number;
+  keyword: string;
 }
 
 // 文件上传模块
