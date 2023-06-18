@@ -31,6 +31,7 @@ const username = computed(() => userStore.userInfo.name);
     align-items: center;
     & > * {
       margin-left: 21px;
+      cursor: pointer;
     }
   }
   .username {
