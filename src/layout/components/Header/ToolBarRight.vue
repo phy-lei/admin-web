@@ -2,6 +2,7 @@
   <div class="tool-bar-ri">
     <div class="header-icon">
       <SearchMenu id="searchMenu" />
+      <ThemeSetting id="themeSetting" />
       <Fullscreen id="fullscreen" />
     </div>
     <span class="username">{{ username }}</span>
@@ -13,6 +14,7 @@
 import { computed } from 'vue';
 import { useUserStore } from '@/stores/modules/user';
 import SearchMenu from './components/SearchMenu.vue';
+import ThemeSetting from './components/ThemeSetting.vue';
 import Fullscreen from './components/Fullscreen.vue';
 import Avatar from './components/Avatar.vue';
 

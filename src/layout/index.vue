@@ -28,6 +28,7 @@
       <Main />
     </el-container>
   </el-container>
+  <ThemeDrawer />
 </template>
 
 <script setup lang="ts" name="layoutVertical">
@@ -35,6 +36,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/modules/auth';
 import { useGlobalStore } from '@/stores/modules/global';
+import ThemeDrawer from './components/ThemeDrawer/index.vue';
 import Main from '@/layout/components/Main/index.vue';
 import ToolBarLeft from '@/layout/components/Header/ToolBarLeft.vue';
 import ToolBarRight from '@/layout/components/Header/ToolBarRight.vue';

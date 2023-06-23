@@ -35,8 +35,6 @@ export const useGlobalStore = defineStore({
     tabs: true,
     // 标签页图标
     tabsIcon: true,
-    // 页脚
-    footer: true,
   }),
   getters: {},
   actions: {
