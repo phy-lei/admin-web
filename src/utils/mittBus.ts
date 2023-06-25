@@ -5,5 +5,4 @@ type Events = {
 };
 
 const mittBus = mitt<Events>();
-
 export default mittBus;

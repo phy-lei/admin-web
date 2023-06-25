@@ -1,7 +1,6 @@
 <template>
   <div class="theme-setting">
-    <!-- <i :class="'iconfont icon-zhuti'" class="toolBar-icon" @click="openDrawer"></i> -->
-    <el-icon @click="openDrawer"><Setting /></el-icon>
+    <SvgIcon name="theme" @click="openDrawer"></SvgIcon>
   </div>
 </template>
 

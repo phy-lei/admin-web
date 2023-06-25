@@ -1,7 +1,7 @@
 <template>
   <div class="menu-search-dialog">
-    <el-icon @click="handleOpen"><Search /></el-icon>
-    <!-- <i :class="'iconfont icon-sousuo'" class="toolBar-icon" ></i> -->
+    <SvgIcon name="search" @click="handleOpen"></SvgIcon>
+
     <el-dialog
       v-model="isShowSearch"
       destroy-on-close

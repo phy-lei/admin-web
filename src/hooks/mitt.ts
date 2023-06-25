@@ -28,7 +28,7 @@ export interface Emitter<Events extends Record<EventType, unknown>> {
   off(type: '*', handler: WildcardHandler<Events>): void;
 
   emit<Key extends keyof Events>(type: Key, event: Events[Key]): void;
-  emit<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never): void;
+  emit<Key extends keyof Events>(type: undefined extends Events[Key] ? never : Key): void;
 }
 
 /**

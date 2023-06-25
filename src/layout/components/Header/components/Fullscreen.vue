@@ -1,7 +1,6 @@
 <template>
   <div class="fullscreen">
-    <el-icon @click="toggle"><FullScreen /></el-icon>
-    <!-- <i :class="['iconfont', isFullscreen ? 'icon-suoxiao' : 'icon-fangda']" class="toolBar-icon" @click="toggle"></i> -->
+    <SvgIcon :name="isFullscreen ? 'zoom-in-screen' : 'full-screen'" @click="toggle"></SvgIcon>
   </div>
 </template>
 
