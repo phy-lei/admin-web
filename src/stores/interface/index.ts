@@ -1,3 +1,5 @@
+import { UserVO } from '@/api/login/model';
+
 export type LayoutType = 'vertical' | 'classic' | 'transverse' | 'columns';
 
 export type AssemblySizeType = 'large' | 'default' | 'small';
@@ -26,7 +28,7 @@ export interface GlobalState {
 /* UserState */
 export interface UserState {
   token: string;
-  userInfo: { name: string };
+  userInfo: UserVO;
 }
 
 /* tabsMenuProps */
