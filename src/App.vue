@@ -8,10 +8,14 @@
 import { ref, reactive, computed } from 'vue';
 import { ElConfigProvider } from 'element-plus';
 import { useGlobalStore } from '@/stores/modules/global';
+import { useTheme } from '@/hooks/useTheme';
 
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 
 const globalStore = useGlobalStore();
+
+const { initTheme } = useTheme();
+initTheme();
 
 const locale = ref(zhCn);
 

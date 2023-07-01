@@ -32,6 +32,7 @@ export default defineComponent({
   height: 1.2em;
   vertical-align: -0.18em;
   fill: currentColor;
+  stroke: currentColor;
   overflow: hidden;
 }
 </style>

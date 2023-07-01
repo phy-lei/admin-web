@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-search-dialog">
+  <div class="menu-search-dialog toolBar-icon">
     <SvgIcon name="search" @click="handleOpen"></SvgIcon>
 
     <el-dialog

@@ -19,7 +19,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { useGlobalStore } from '@/stores/modules/global';
 import { useKeepAliveStore } from '@/stores/modules/keepAlive';
 import Maximize from './components/Maximize.vue';
-import Tabs from '@/layout/components/Tabs/index.vue';
+import Tabs from '@/layouts/components/Tabs/index.vue';
 
 const globalStore = useGlobalStore();
 const { maximize, isCollapse, layout, tabs } = storeToRefs(globalStore);

@@ -22,7 +22,6 @@ export interface GlobalState {
   breadcrumbIcon: boolean;
   tabs: boolean;
   tabsIcon: boolean;
-  footer: boolean;
 }
 
 /* UserState */

@@ -20,7 +20,7 @@
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary">分配菜单</el-button>
+        <el-button type="primary" @click="allocMenu(scope.row)">分配菜单</el-button>
         <el-button type="primary">分配资源</el-button>
         <el-button type="primary" @click="edit(scope.row)">编辑</el-button>
         <el-button type="primary" @click="del(scope.row)">删除</el-button>
@@ -28,12 +28,14 @@
     </ProTable>
 
     <AddDialog ref="addDialog" @confirm="roleAddHandler"></AddDialog>
+    <AllocMenuDialog ref="allocMenuDialog"></AllocMenuDialog>
   </div>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
 import ProTable from '@/components/ProTable/index.vue';
 import AddDialog from './components/AddDialog.vue';
+import AllocMenuDialog from './components/AllocMenuDialog.vue';
 import { ColumnProps } from '@/components/ProTable/interface';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import {
@@ -45,6 +47,7 @@ import {
 } from '@/api/role';
 
 const addDialog = ref<InstanceType<typeof AddDialog>>();
+const allocMenuDialog = ref<InstanceType<typeof AllocMenuDialog>>();
 const proTable = ref<InstanceType<typeof ProTable>>();
 const columns: Partial<ColumnProps>[] = [
   { type: 'index', label: '#', width: 80 },
@@ -132,5 +135,9 @@ const del = (row) => {
       proTable.value?.getTableList();
     });
   });
+};
+
+const allocMenu = (row) => {
+  allocMenuDialog.value?.showDialog();
 };
 </script>

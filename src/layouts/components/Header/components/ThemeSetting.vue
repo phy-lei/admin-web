@@ -1,5 +1,5 @@
 <template>
-  <div class="theme-setting">
+  <div class="theme-setting toolBar-icon">
     <SvgIcon name="theme" @click="openDrawer"></SvgIcon>
   </div>
 </template>

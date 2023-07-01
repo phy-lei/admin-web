@@ -123,12 +123,16 @@
       <span>标签栏图标</span>
       <el-switch v-model="tabsIcon" />
     </div>
+    <div>
+      <el-button type="primary" :icon="Refresh" @click="resetConfig">重置配置</el-button>
+    </div>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { Refresh } from '@element-plus/icons-vue';
 import { useTheme } from '@/hooks/useTheme';
 import { useGlobalStore } from '@/stores/modules/global';
 import { LayoutType } from '@/stores/interface';
@@ -136,7 +140,7 @@ import { DEFAULT_PRIMARY } from '@/config';
 import mittBus from '@/utils/mittBus';
 import SwitchDark from '@/components/SwitchDark/index.vue';
 
-const { changePrimary, changeGreyOrWeak, setAsideTheme } = useTheme();
+const { changePrimary, changeGreyOrWeak, setAsideTheme, initTheme } = useTheme();
 
 const globalStore = useGlobalStore();
 const {
@@ -177,8 +181,13 @@ const drawerVisible = ref(false);
 mittBus.on('openThemeDrawer', () => {
   drawerVisible.value = true;
 });
+
+const resetConfig = () => {
+  globalStore.resetGlobalState();
+  initTheme();
+};
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import './index.scss';
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen">
+  <div class="fullscreen toolBar-icon">
     <SvgIcon :name="isFullscreen ? 'zoom-in-screen' : 'full-screen'" @click="toggle"></SvgIcon>
   </div>
 </template>

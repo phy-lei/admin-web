@@ -1,189 +1,134 @@
 <template>
-  <div class="app-container">
-    <el-card class="operate-container" shadow="never">
-      <i class="el-icon-tickets" style="margin-top: 5px"></i>
-      <span style="margin-top: 5px">数据列表</span>
-      <el-button class="btn-add" @click="handleAddMenu()" size="small">添加</el-button>
-    </el-card>
-    <div class="table-container">
-      <el-table
-        ref="menuTable"
-        style="width: 100%"
-        :data="data.list"
-        v-loading="data.listLoading"
-        border
-      >
-        <el-table-column label="编号" width="100" align="center">
-          <template #default="scope">{{ scope.row.id }}</template>
-        </el-table-column>
-        <el-table-column label="菜单名称" align="center">
-          <template #default="scope">{{ scope.row.title }}</template>
-        </el-table-column>
-        <el-table-column label="菜单级数" width="100" align="center">
-          <template #default="scope">{{ levelFilter(scope.row.level) }}</template>
-        </el-table-column>
-        <el-table-column label="前端名称" align="center">
-          <template #default="scope">{{ scope.row.name }}</template>
-        </el-table-column>
-        <el-table-column label="前端图标" width="100" align="center">
-          <template #default="scope"><svg-icon :icon-class="scope.row.icon"></svg-icon></template>
-        </el-table-column>
-        <el-table-column label="是否显示" width="100" align="center">
-          <template #default="scope">
-            <el-switch
-              @change="handleHiddenChange(scope.$index, scope.row)"
-              :active-value="0"
-              :inactive-value="1"
-              v-model="scope.row.hidden"
-            ></el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="排序" width="100" align="center">
-          <template #default="scope">{{ scope.row.sort }}</template>
-        </el-table-column>
-        <el-table-column label="设置" width="120" align="center">
-          <template #default="scope">
-            <el-button
-              size="small"
-              type="text"
-              :disabled="disableNextLevel(scope.row.level)"
-              @click="handleShowNextLevel(scope.$index, scope.row)"
-            >
-              查看下级
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
-          <template #default="scope">
-            <el-button size="small" type="text" @click="handleUpdate(scope.$index, scope.row)">
-              编辑
-            </el-button>
-            <el-button size="small" type="text" @click="handleDelete(scope.$index, scope.row)">
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <div class="pagination-container">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        layout="total, sizes,prev, pager, next,jumper"
-        :page-size="data.listQuery.pageSize"
-        :page-sizes="[10, 15, 20]"
-        :current-page.sync="data.listQuery.pageNum"
-        :total="data.total"
-      ></el-pagination>
-    </div>
+  <div>
+    <ProTable ref="proTable" :columns="columns" :request-api="getRoleListApi">
+      <!-- 表格 header 按钮 -->
+      <template #tableHeader>
+        <el-button type="primary" plain @click="handleAdd">添加</el-button>
+      </template>
+
+      <!-- 用户状态 slot -->
+      <template #lqbRoleStatus="scope">
+        <!-- 如果插槽的值为 el-switch，第一次加载会默认触发 switch 的 @change 方法，所有在外层包一个盒子，点击触发盒子 click 方法（暂时只能这样解决） -->
+        <div @click="handleStatusChange(scope.row)">
+          <el-switch
+            :value="scope.row.lqbRoleStatus"
+            :active-text="scope.row.lqbRoleStatus === 1 ? '启用' : '禁用'"
+            :active-value="1"
+            :inactive-value="0"
+          />
+        </div>
+      </template>
+      <!-- 表格操作 -->
+      <template #operation="scope">
+        <el-button type="primary" @click="edit(scope.row)">编辑</el-button>
+        <el-button type="primary" @click="del(scope.row)">删除</el-button>
+      </template>
+    </ProTable>
+
+    <AddDialog ref="addDialog" @confirm="roleAddHandler"></AddDialog>
   </div>
 </template>
-
 <script lang="ts" setup>
-import { reactive, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref } from 'vue';
+import ProTable from '@/components/ProTable/index.vue';
+import AddDialog from './components/AddDialog.vue';
+import { ColumnProps } from '@/components/ProTable/interface';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { fetchList, deleteMenu, updateHidden } from '@/api/menu';
+import {
+  getRoleListApi,
+  createRoleApi,
+  updateRoleApi,
+  updateRoleStatusApi,
+  deleteRoleApi,
+} from '@/api/role';
 
-const route = useRoute();
-const router = useRouter();
-const data = reactive({
-  list: [],
-  total: 0,
-  listLoading: true,
-  listQuery: {
-    pageNum: 1,
-    pageSize: 5,
+const addDialog = ref<InstanceType<typeof AddDialog>>();
+const proTable = ref<InstanceType<typeof ProTable>>();
+const columns: Partial<ColumnProps>[] = [
+  { type: 'index', label: '#', width: 80 },
+  {
+    prop: 'lqbRoleName',
+    label: '角色名称',
+    width: 130,
+    search: { el: 'input', key: 'keyword' },
   },
-  parentId: 0,
-});
+  // 😄 enum 可以直接是数组对象，也可以是请求方法(proTable 内部会执行获取 enum 的这个方法)，下面用户状态也同理
+  // 😄 enum 为请求方法时，后台返回的数组对象 key 值不是 label 和 value 的情况，可以在 searchProps 中指定 label 和 value 的 key 值
+  {
+    prop: 'lqbRemark',
+    label: '描述',
+  },
+  { prop: 'lqbUserCount', label: '用户数', width: 80 },
+  { prop: 'lqbCreateTime', label: '添加时间' },
+  {
+    prop: 'lqbRoleStatus',
+    label: '状态',
+  },
+  { prop: 'operation', label: '操作', width: 380, fixed: 'right' },
+];
 
-resetParentId();
-getList();
+const handleAdd = () => {
+  addDialog.value?.showDialog();
+};
 
-// watch(
-//   () => route,
-//   () => {
-//     resetParentId();
-//     getList();
-//   }
-// );
-
-function resetParentId() {
-  data.listQuery.pageNum = 1;
-  if (route.query.parentId != null) {
-    data.parentId = route.query.parentId;
-  } else {
-    data.parentId = 0;
-  }
-}
-function handleAddMenu() {
-  router.push('/ums/addMenu');
-}
-function getList() {
-  data.listLoading = true;
-  fetchList(data.parentId, data.listQuery).then((response) => {
-    data.listLoading = false;
-    data.list = response.data.list;
-    data.total = response.data.total;
-  });
-}
-function handleSizeChange(val) {
-  data.listQuery.pageNum = 1;
-  data.listQuery.pageSize = val;
-  getList();
-}
-function handleCurrentChange(val) {
-  data.listQuery.pageNum = val;
-  getList();
-}
-function handleHiddenChange(index, row) {
-  updateHidden(row.id, { hidden: row.hidden }).then((response) => {
-    ElMessage({
-      message: '修改成功',
-      type: 'success',
-      duration: 1000,
+const roleAddHandler = (data) => {
+  console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', data);
+  if (!addDialog.value?.isEdit) {
+    createRoleApi(data).then(() => {
+      ElMessage({
+        message: '添加成功！',
+        type: 'success',
+      });
+      proTable.value?.getTableList();
     });
-  });
-}
-function handleShowNextLevel(index, row) {
-  router.push({ path: '/ums/menu', query: { parentId: row.id } });
-}
-function handleUpdate(index, row) {
-  router.push({ path: '/ums/updateMenu', query: { id: row.id } });
-}
-function handleDelete(index, row) {
-  ElMessageBox.confirm('是否要删除该菜单', '提示', {
+  } else {
+    updateRoleApi(data).then(() => {
+      ElMessage({
+        message: '修改成功！',
+        type: 'success',
+      });
+      proTable.value?.getTableList();
+    });
+  }
+};
+
+const edit = (row) => {
+  console.log('%c [ row ]', 'font-size:13px; background:pink; color:#bf2c9f;', row);
+  addDialog.value?.showDialog(row);
+};
+
+const handleStatusChange = (row) => {
+  ElMessageBox.confirm('是否要修改该状态?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    deleteMenu(row.id).then((response) => {
+    updateRoleStatusApi({
+      id: row.lqbId,
+      status: 1 ^ row.lqbRoleStatus,
+    }).then(() => {
       ElMessage({
-        message: '删除成功',
         type: 'success',
-        duration: 1000,
+        message: '修改成功!',
       });
-      getList();
+      proTable.value?.getTableList();
     });
   });
-}
+};
 
-function levelFilter(value) {
-  if (value === 0) {
-    return '一级';
-  } else if (value === 1) {
-    return '二级';
-  }
-}
-function disableNextLevel(value) {
-  if (value === 0) {
-    return false;
-  } else {
-    return true;
-  }
-}
+const del = (row) => {
+  ElMessageBox.confirm('是否要删除该角色?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteRoleApi([row.lqbId]).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '删除成功!',
+      });
+      proTable.value?.getTableList();
+    });
+  });
+};
 </script>
-
-<style scoped></style>
