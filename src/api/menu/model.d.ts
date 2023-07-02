@@ -1,24 +1,17 @@
-export interface ReqParams {
-  lqbUsername: string;
-  lqbPasswd: string;
+export interface MenuTreeListItemDto {
+  lqbId: number;
+  lqbMenuName: string;
+  lqbMenuCode: string;
+  lqbMenuLevel: number;
+  lqbOrderNum?: any;
+  lqbParentId: number;
+  lqbParentName: string;
+  lqbPath: string;
+  lqbRemark: string;
+  lqbWebName: string;
+  lqbUrl: string;
+  lqbIcon: string;
+  lqbHidden: number;
+  children: any[];
 }
 
-export interface ReqAuth {
-  auths: string[];
-  modules: string[];
-  is_admin?: 0 | 1;
-}
-
-export interface ResResult {
-  isLogin?: boolean
-  loginDevice?: string
-  loginId?: Record<string, any>
-  loginType?: string
-  sessionTimeout?: number
-  tag?: string
-  tokenActivityTimeout?: number
-  tokenName?: string
-  tokenSessionTimeout?: number
-  tokenTimeout?: number
-  tokenValue: string
-}

@@ -5,12 +5,10 @@
       :data="menuTreeList"
       show-checkbox
       default-expand-all
-      node-key="id"
+      node-key="lqbId"
       highlight-current
-      :props="{
-        children: 'children',
-        label: 'title',
-      }"
+      :default-checked-keys="selectedId"
+      :props="defaultProps"
     ></el-tree>
     <template #footer>
       <span class="dialog-footer">
@@ -23,29 +21,44 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { getMenuListAllApi } from '@/api/menu';
+import { ElTree } from 'element-plus';
+import { getMenuListAllApi, getMenuListByRoleIdApi } from '@/api/menu';
 
 const emit = defineEmits(['confirm']);
-
+const defaultProps = {
+  children: 'children',
+  label: 'lqbMenuName',
+  value: 'lqbId',
+};
+const tree = ref<InstanceType<typeof ElTree>>();
 const dialogVisible = ref(false);
-const menuTreeList = ref([]);
+const roleId = ref(0);
+const selectedId = ref<number[]>([]);
+const menuTreeList = ref<Awaited<ReturnType<typeof getMenuListAllApi>>>([]);
+
+const getMenuListByRoleId = async (id) => {
+  const res = await getMenuListByRoleIdApi(id);
+  console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', res);
+  selectedId.value = res.map((item) => item.lqbId);
+};
 
 const getMenuListAll = async () => {
   const res = await getMenuListAllApi();
-  console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', res);
+  menuTreeList.value = res;
 };
 
-const showDialog = () => {
-  getMenuListAll();
+const showDialog = async (id) => {
+  await getMenuListAll();
+  roleId.value = id;
+  await getMenuListByRoleId(id);
   dialogVisible.value = true;
 };
-
 const close = () => {
   dialogVisible.value = false;
 };
 
 const confirm = () => {
-  emit('confirm');
+  emit('confirm', roleId.value, tree.value?.getCheckedKeys());
   close();
 };
 

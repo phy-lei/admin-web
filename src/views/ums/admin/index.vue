@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ProTable ref="proTable" :columns="columns" :request-api="fetchListApi">
+    <ProTable ref="proTable" :columns="columns" :request-api="fetchListApi" row-key="lqbId">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" plain @click="handleAdd">添加</el-button>

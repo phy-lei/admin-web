@@ -1,6 +1,12 @@
 <template>
   <div>
-    <ProTable ref="proTable" :columns="columns" :request-api="getRoleListApi">
+    <ProTable
+      ref="proTable"
+      :columns="columns"
+      :request-api="getMenuListAllApi"
+      :pagination="false"
+      row-key="lqbId"
+    >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" plain @click="handleAdd">添加</el-button>
@@ -8,15 +14,9 @@
 
       <!-- 用户状态 slot -->
       <template #lqbRoleStatus="scope">
-        <!-- 如果插槽的值为 el-switch，第一次加载会默认触发 switch 的 @change 方法，所有在外层包一个盒子，点击触发盒子 click 方法（暂时只能这样解决） -->
-        <div @click="handleStatusChange(scope.row)">
-          <el-switch
-            :value="scope.row.lqbRoleStatus"
-            :active-text="scope.row.lqbRoleStatus === 1 ? '启用' : '禁用'"
-            :active-value="1"
-            :inactive-value="0"
-          />
-        </div>
+        <el-button text bg type="primary">
+          {{ scope.row.lqbRoleStatus === 1 ? '启用' : '禁用' }}
+        </el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
@@ -34,32 +34,26 @@ import ProTable from '@/components/ProTable/index.vue';
 import AddDialog from './components/AddDialog.vue';
 import { ColumnProps } from '@/components/ProTable/interface';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import {
-  getRoleListApi,
-  createRoleApi,
-  updateRoleApi,
-  updateRoleStatusApi,
-  deleteRoleApi,
-} from '@/api/role';
+import { getMenuListAllApi, addMenuApi, updateMenuApi, delMenuApi } from '@/api/menu';
 
 const addDialog = ref<InstanceType<typeof AddDialog>>();
 const proTable = ref<InstanceType<typeof ProTable>>();
 const columns: Partial<ColumnProps>[] = [
   { type: 'index', label: '#', width: 80 },
   {
-    prop: 'lqbRoleName',
-    label: '角色名称',
-    width: 130,
-    search: { el: 'input', key: 'keyword' },
+    prop: 'lqbMenuName',
+    label: '菜单名称',
   },
-  // 😄 enum 可以直接是数组对象，也可以是请求方法(proTable 内部会执行获取 enum 的这个方法)，下面用户状态也同理
-  // 😄 enum 为请求方法时，后台返回的数组对象 key 值不是 label 和 value 的情况，可以在 searchProps 中指定 label 和 value 的 key 值
   {
-    prop: 'lqbRemark',
-    label: '描述',
+    prop: 'lqbIcon',
+    label: '图标',
+    width: 80,
   },
-  { prop: 'lqbUserCount', label: '用户数', width: 80 },
-  { prop: 'lqbCreateTime', label: '添加时间' },
+  {
+    prop: 'lqbOrderNum',
+    label: '排序',
+  },
+  { prop: 'lqbUrl', label: '访问路径' },
   {
     prop: 'lqbRoleStatus',
     label: '状态',
@@ -68,13 +62,13 @@ const columns: Partial<ColumnProps>[] = [
 ];
 
 const handleAdd = () => {
-  addDialog.value?.showDialog();
+  addDialog.value?.showDialog(proTable.value?.tableData as any);
 };
 
 const roleAddHandler = (data) => {
   console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', data);
   if (!addDialog.value?.isEdit) {
-    createRoleApi(data).then(() => {
+    addMenuApi(data).then(() => {
       ElMessage({
         message: '添加成功！',
         type: 'success',
@@ -82,7 +76,7 @@ const roleAddHandler = (data) => {
       proTable.value?.getTableList();
     });
   } else {
-    updateRoleApi(data).then(() => {
+    updateMenuApi(data).then(() => {
       ElMessage({
         message: '修改成功！',
         type: 'success',
@@ -94,26 +88,7 @@ const roleAddHandler = (data) => {
 
 const edit = (row) => {
   console.log('%c [ row ]', 'font-size:13px; background:pink; color:#bf2c9f;', row);
-  addDialog.value?.showDialog(row);
-};
-
-const handleStatusChange = (row) => {
-  ElMessageBox.confirm('是否要修改该状态?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    updateRoleStatusApi({
-      id: row.lqbId,
-      status: 1 ^ row.lqbRoleStatus,
-    }).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '修改成功!',
-      });
-      proTable.value?.getTableList();
-    });
-  });
+  addDialog.value?.showDialog(proTable.value?.tableData as any, row);
 };
 
 const del = (row) => {
@@ -122,7 +97,7 @@ const del = (row) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    deleteRoleApi([row.lqbId]).then(() => {
+    delMenuApi(row.lqbId).then(() => {
       ElMessage({
         type: 'success',
         message: '删除成功!',

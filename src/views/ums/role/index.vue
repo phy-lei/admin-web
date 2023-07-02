@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ProTable ref="proTable" :columns="columns" :request-api="getRoleListApi">
+    <ProTable ref="proTable" :columns="columns" :request-api="getRoleListApi" row-key="lqbId">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" plain @click="handleAdd">添加</el-button>
@@ -21,14 +21,13 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" @click="allocMenu(scope.row)">分配菜单</el-button>
-        <el-button type="primary">分配资源</el-button>
         <el-button type="primary" @click="edit(scope.row)">编辑</el-button>
         <el-button type="primary" @click="del(scope.row)">删除</el-button>
       </template>
     </ProTable>
 
     <AddDialog ref="addDialog" @confirm="roleAddHandler"></AddDialog>
-    <AllocMenuDialog ref="allocMenuDialog"></AllocMenuDialog>
+    <AllocMenuDialog ref="allocMenuDialog" @confirm="allocMenuConfirm"></AllocMenuDialog>
   </div>
 </template>
 <script lang="ts" setup>
@@ -44,6 +43,7 @@ import {
   updateRoleApi,
   updateRoleStatusApi,
   deleteRoleApi,
+  allocMenuByIdApi,
 } from '@/api/role';
 
 const addDialog = ref<InstanceType<typeof AddDialog>>();
@@ -138,6 +138,16 @@ const del = (row) => {
 };
 
 const allocMenu = (row) => {
-  allocMenuDialog.value?.showDialog();
+  allocMenuDialog.value?.showDialog(row.lqbId);
+};
+
+const allocMenuConfirm = (roleId: number, arr: number[]) => {
+  allocMenuByIdApi(roleId, arr).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '分配菜单成功!',
+    });
+    proTable.value?.getTableList();
+  });
 };
 </script>

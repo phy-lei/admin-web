@@ -25,10 +25,5 @@ export const deleteRoleApi = async (params: number[]) => http.post(OAUTH + `/rol
 
 export const fetchAllRoleList = async (params: ReqPage) => http.get(OAUTH + `/role/list`, params);
 
-export const allocResource = async (params: ReqPage) => http.get(OAUTH + `/role/list`, params);
-
-export const listResourceByRole = async (params: ReqPage) => http.get(OAUTH + `/role/list`, params);
-
-export const allocMenu = async (params: ReqPage) => http.get(OAUTH + `/role/list`, params);
-
-export const listMenuByRole = async (params: ReqPage) => http.get(OAUTH + `/role/list`, params);
+export const allocMenuByIdApi = async (roleId: number, params: number[]) =>
+  http.post(OAUTH + `/role/allocMenu/${roleId}`, params);

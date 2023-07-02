@@ -43,37 +43,10 @@
             "isKeepAlive": true
           }
         },
-        {
-          "path": "/ums/allocMenu",
-          "name": "allocMenu",
-          "component": "/ums/role/allocMenu",
-          "meta": {
-            "icon": "",
-            "title": "分配菜单",
-            "isLink": "",
-            "isHide": true,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
-        {
-          "path": "/ums/allocResource",
-          "name": "allocResource",
-          "component": "/ums/role/allocResource",
-          "meta": {
-            "icon": "",
-            "title": "分配资源",
-            "isLink": "",
-            "isHide": true,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
+    
         {
           "path": "/ums/menu",
-          "name": "menu",
+          "name": "menuList",
           "component": "/ums/menu/index",
           "meta": {
             "icon": "Menu",
@@ -82,65 +55,10 @@
             "isHide": false,
             "isFull": false,
             "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
-        {
-          "path": "/ums/addMenu",
-          "name": "addMenu",
-          "component": "/ums/menu/add",
-          "meta": {
-            "icon": "",
-            "title": "添加菜单",
-            "isLink": "",
-            "isHide": true,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
-        {
-          "path": "/ums/updateMenu",
-          "name": "updateMenu",
-          "component": "/ums/menu/update",
-          "meta": {
-            "icon": "",
-            "title": "修改菜单",
-            "isLink": "",
-            "isHide": true,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
-        {
-          "path": "/ums/resource",
-          "name": "resource",
-          "component": "/ums/resource/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "资源列表",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
-        {
-          "path": "/ums/resourceCategory",
-          "name": "resourceCategory",
-          "component": "/ums/resource/categoryList",
-          "meta": {
-            "icon": "",
-            "title": "资源分类",
-            "isLink": "",
-            "isHide": true,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
+            "isKeepAlive": true
           }
         }
+    
       ]
     },
     {

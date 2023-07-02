@@ -56,7 +56,9 @@ const showDialog = (form?: RoleListItemDto) => {
 
 const close = () => {
   dialogVisible.value = false;
-  Object.assign(data.value, initData);
+  setTimeout(() => {
+    Object.assign(data.value, initData);
+  }, 500);
 };
 
 const confirm = () => {
