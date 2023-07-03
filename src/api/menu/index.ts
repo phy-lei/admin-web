@@ -1,4 +1,3 @@
-import { ReqPage, ResPage } from '@/api/interface';
 import { MenuTreeListItemDto } from './model';
 import http from '@/api';
 import { OAUTH } from '@/api/config/servicePort';

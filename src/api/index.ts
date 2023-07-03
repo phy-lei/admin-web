@@ -66,7 +66,7 @@ class RequestHttp {
         // 登陆失效
         if (data.code == ResultEnum.OVERDUE) {
           userStore.setToken('');
-          // router.replace(LOGIN_URL);
+          router.replace(LOGIN_URL);
           ElMessage.error(data.message);
           return Promise.reject(data);
         }

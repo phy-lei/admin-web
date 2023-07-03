@@ -50,6 +50,7 @@ const showDialog = (form?: RoleListItemDto) => {
     isEdit.value = true;
   } else {
     isEdit.value = false;
+    data.value = { ...initData };
   }
   dialogVisible.value = true;
 };

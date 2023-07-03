@@ -1,5 +1,5 @@
-import { isArray } from "@/utils/is";
-import { FieldNamesProps } from "@/components/ProTable/interface";
+import { isArray } from '@/utils/is';
+import { FieldNamesProps } from '@/components/ProTable/interface';
 
 /**
  * @description 获取localStorage
@@ -48,8 +48,8 @@ export function localClear() {
  * @returns {String}
  */
 export function isType(val: any) {
-  if (val === null) return "null";
-  if (typeof val !== "object") return typeof val;
+  if (val === null) return 'null';
+  if (typeof val !== 'object') return typeof val;
   else return Object.prototype.toString.call(val).slice(8, -1).toLocaleLowerCase();
 }
 
@@ -58,10 +58,10 @@ export function isType(val: any) {
  * @returns {String}
  */
 export function generateUUID() {
-  let uuid = "";
+  let uuid = '';
   for (let i = 0; i < 32; i++) {
-    let random = (Math.random() * 16) | 0;
-    if (i === 8 || i === 12 || i === 16 || i === 20) uuid += "-";
+    const random = (Math.random() * 16) | 0;
+    if (i === 8 || i === 12 || i === 16 || i === 20) uuid += '-';
     uuid += (i === 12 ? 4 : i === 16 ? (random & 3) | 8 : random).toString(16);
   }
   return uuid;
@@ -75,13 +75,13 @@ export function generateUUID() {
  */
 export function isObjectValueEqual(a: { [key: string]: any }, b: { [key: string]: any }) {
   if (!a || !b) return false;
-  let aProps = Object.getOwnPropertyNames(a);
-  let bProps = Object.getOwnPropertyNames(b);
+  const aProps = Object.getOwnPropertyNames(a);
+  const bProps = Object.getOwnPropertyNames(b);
   if (aProps.length != bProps.length) return false;
   for (let i = 0; i < aProps.length; i++) {
-    let propName = aProps[i];
-    let propA = a[propName];
-    let propB = b[propName];
+    const propName = aProps[i];
+    const propA = a[propName];
+    const propB = b[propName];
     if (!b.hasOwnProperty(propName)) return false;
     if (propA instanceof Object) {
       if (!isObjectValueEqual(propA, propB)) return false;
@@ -99,7 +99,7 @@ export function isObjectValueEqual(a: { [key: string]: any }, b: { [key: string]
  * @returns {Number}
  */
 export function randomNum(min: number, max: number): number {
-  let num = Math.floor(Math.random() * (min - max) + max);
+  const num = Math.floor(Math.random() * (min - max) + max);
   return num;
 }
 
@@ -108,8 +108,8 @@ export function randomNum(min: number, max: number): number {
  * @returns {String}
  */
 export function getTimeState() {
-  let timeNow = new Date();
-  let hours = timeNow.getHours();
+  const timeNow = new Date();
+  const hours = timeNow.getHours();
   if (hours >= 6 && hours <= 10) return `早上好 ⛅`;
   if (hours >= 10 && hours <= 14) return `中午好 🌞`;
   if (hours >= 14 && hours <= 18) return `下午好 🌞`;
@@ -122,12 +122,12 @@ export function getTimeState() {
  * @returns {String}
  */
 export function getBrowserLang() {
-  let browserLang = navigator.language ? navigator.language : navigator.browserLanguage;
-  let defaultBrowserLang = "";
-  if (["cn", "zh", "zh-cn"].includes(browserLang.toLowerCase())) {
-    defaultBrowserLang = "zh";
+  const browserLang = navigator.language ? navigator.language : navigator.browserLanguage;
+  let defaultBrowserLang = '';
+  if (['cn', 'zh', 'zh-cn'].includes(browserLang.toLowerCase())) {
+    defaultBrowserLang = 'zh';
   } else {
-    defaultBrowserLang = "en";
+    defaultBrowserLang = 'en';
   }
   return defaultBrowserLang;
 }
@@ -138,8 +138,11 @@ export function getBrowserLang() {
  * @returns {Array}
  */
 export function getFlatMenuList(menuList: Menu.MenuOptions[]): Menu.MenuOptions[] {
-  let newMenuList: Menu.MenuOptions[] = JSON.parse(JSON.stringify(menuList));
-  return newMenuList.flatMap(item => [item, ...(item.children ? getFlatMenuList(item.children) : [])]);
+  const newMenuList: Menu.MenuOptions[] = JSON.parse(JSON.stringify(menuList));
+  return newMenuList.flatMap((item) => [
+    item,
+    ...(item.children ? getFlatMenuList(item.children) : []),
+  ]);
 }
 
 /**
@@ -148,8 +151,8 @@ export function getFlatMenuList(menuList: Menu.MenuOptions[]): Menu.MenuOptions[
  * @returns {Array}
  * */
 export function getShowMenuList(menuList: Menu.MenuOptions[]) {
-  let newMenuList: Menu.MenuOptions[] = JSON.parse(JSON.stringify(menuList));
-  return newMenuList.filter(item => {
+  const newMenuList: Menu.MenuOptions[] = JSON.parse(JSON.stringify(menuList));
+  return newMenuList.filter((item) => {
     item.children?.length && (item.children = getShowMenuList(item.children));
     return !item.meta?.isHide;
   });
@@ -162,7 +165,11 @@ export function getShowMenuList(menuList: Menu.MenuOptions[]) {
  * @param {Object} result 处理后的结果
  * @returns {Object}
  */
-export const getAllBreadcrumbList = (menuList: Menu.MenuOptions[], parent = [], result: { [key: string]: any } = {}) => {
+export const getAllBreadcrumbList = (
+  menuList: Menu.MenuOptions[],
+  parent = [],
+  result: { [key: string]: any } = {}
+) => {
   for (const item of menuList) {
     result[item.path] = [...parent, item];
     if (item.children) getAllBreadcrumbList(item.children, result[item.path], result);
@@ -176,9 +183,12 @@ export const getAllBreadcrumbList = (menuList: Menu.MenuOptions[], parent = [], 
  * @param {Array} menuPathArr 菜单地址的一维数组 ['**','**']
  * @returns {Array}
  */
-export function getMenuListPath(menuList: Menu.MenuOptions[], menuPathArr: string[] = []): string[] {
+export function getMenuListPath(
+  menuList: Menu.MenuOptions[],
+  menuPathArr: string[] = []
+): string[] {
   for (const item of menuList) {
-    if (typeof item === "object" && item.path) menuPathArr.push(item.path);
+    if (typeof item === 'object' && item.path) menuPathArr.push(item.path);
     if (item.children?.length) getMenuListPath(item.children, menuPathArr);
   }
   return menuPathArr;
@@ -190,7 +200,10 @@ export function getMenuListPath(menuList: Menu.MenuOptions[], menuPathArr: strin
  * @param {String} path 当前访问地址
  * @returns {Object | null}
  */
-export function findMenuByPath(menuList: Menu.MenuOptions[], path: string): Menu.MenuOptions | null {
+export function findMenuByPath(
+  menuList: Menu.MenuOptions[],
+  path: string
+): Menu.MenuOptions | null {
   for (const item of menuList) {
     if (item.path === path) return item;
     if (item.children) {
@@ -207,8 +220,11 @@ export function findMenuByPath(menuList: Menu.MenuOptions[], path: string): Menu
  * @param {Array} keepAliveNameArr 缓存的菜单 name ['**','**']
  * @returns {Array}
  * */
-export function getKeepAliveRouterName(menuList: Menu.MenuOptions[], keepAliveNameArr: string[] = []) {
-  menuList.forEach(item => {
+export function getKeepAliveRouterName(
+  menuList: Menu.MenuOptions[],
+  keepAliveNameArr: string[] = []
+) {
+  menuList.forEach((item) => {
     item.meta.isKeepAlive && item.name && keepAliveNameArr.push(item.name);
     item.children?.length && getKeepAliveRouterName(item.children, keepAliveNameArr);
   });
@@ -224,8 +240,8 @@ export function getKeepAliveRouterName(menuList: Menu.MenuOptions[], keepAliveNa
  * */
 export function formatTableColumn(row: number, col: number, callValue: any) {
   // 如果当前值为数组，使用 / 拼接（根据需求自定义）
-  if (isArray(callValue)) return callValue.length ? callValue.join(" / ") : "--";
-  return callValue ?? "--";
+  if (isArray(callValue)) return callValue.length ? callValue.join(' / ') : '--';
+  return callValue ?? '--';
 }
 
 /**
@@ -235,8 +251,8 @@ export function formatTableColumn(row: number, col: number, callValue: any) {
  * */
 export function formatValue(callValue: any) {
   // 如果当前值为数组，使用 / 拼接（根据需求自定义）
-  if (isArray(callValue)) return callValue.length ? callValue.join(" / ") : "--";
-  return callValue ?? "--";
+  if (isArray(callValue)) return callValue.length ? callValue.join(' / ') : '--';
+  return callValue ?? '--';
 }
 
 /**
@@ -246,8 +262,8 @@ export function formatValue(callValue: any) {
  * @returns {*}
  * */
 export function handleRowAccordingToProp(row: { [key: string]: any }, prop: string) {
-  if (!prop.includes(".")) return row[prop] ?? "--";
-  prop.split(".").forEach(item => (row = row[item] ?? "--"));
+  if (!prop.includes('.')) return row[prop] ?? '--';
+  prop.split('.').forEach((item) => (row = row[item] ?? '--'));
   return row;
 }
 
@@ -257,7 +273,7 @@ export function handleRowAccordingToProp(row: { [key: string]: any }, prop: stri
  * @returns {String}
  * */
 export function handleProp(prop: string) {
-  const propArr = prop.split(".");
+  const propArr = prop.split('.');
   if (propArr.length == 1) return prop;
   return propArr[propArr.length - 1];
 }
@@ -270,18 +286,23 @@ export function handleProp(prop: string) {
  * @param {String} type 过滤类型（目前只有 tag）
  * @returns {String}
  * */
-export function filterEnum(callValue: any, enumData?: any, fieldNames?: FieldNamesProps, type?: "tag") {
-  const value = fieldNames?.value ?? "value";
-  const label = fieldNames?.label ?? "label";
-  const children = fieldNames?.children ?? "children";
+export function filterEnum(
+  callValue: any,
+  enumData?: any,
+  fieldNames?: FieldNamesProps,
+  type?: 'tag'
+) {
+  const value = fieldNames?.value ?? 'value';
+  const label = fieldNames?.label ?? 'label';
+  const children = fieldNames?.children ?? 'children';
   let filterData: { [key: string]: any } = {};
   // 判断 enumData 是否为数组
   if (Array.isArray(enumData)) filterData = findItemNested(enumData, callValue, value, children);
   // 判断是否输出的结果为 tag 类型
-  if (type == "tag") {
-    return filterData?.tagType ? filterData.tagType : "";
+  if (type == 'tag') {
+    return filterData?.tagType ? filterData.tagType : '';
   } else {
-    return filterData ? filterData[label] : "--";
+    return filterData ? filterData[label] : '--';
   }
 }
 
@@ -296,33 +317,39 @@ export function findItemNested(enumData: any, callValue: any, value: string, chi
   }, null);
 }
 
-export function handleTree (arr: number[], options: { id: string, pid: string, children: string }) {
-      const result = [];   // 存放结果集
-      const arrMap = {};  // 
-      for (const item of arr) {
-        const id = item[options.id];
-        const pid = item[options.pid];
+export function handleTree<T extends any[]>(
+  arr: T,
+  options: { id: string; pid: string; children: string } = {
+    id: 'lqbId',
+    pid: 'lqbParentId',
+    children: 'children',
+  }
+) {
+  const result: T = [] as any; // 存放结果集
+  const arrMap = {}; //
+  for (const item of arr) {
+    const id = item[options.id];
+    const pid = item[options.pid];
 
-        if (!arrMap[id]) {
-          arrMap[id] = {
-            ...item,
-            [options.children]: [],
-          }
-        }
-
-        const treeItem = arrMap[id];
-
-        if (pid === 0) {
-          result.push(treeItem);
-        } else {
-          if (!arrMap[pid]) {
-            arrMap[pid] = {
-              [options.children]: [],
-            }
-          }
-          arrMap[pid][options.children].push(treeItem)
-        }
-
-      }
-      return { result, arrMap };
+    if (!arrMap[id]) {
+      arrMap[id] = {
+        ...item,
+        [options.children]: [],
+      };
     }
+
+    const treeItem = arrMap[id];
+
+    if (pid === 0) {
+      result.push(treeItem);
+    } else {
+      if (!arrMap[pid]) {
+        arrMap[pid] = {
+          [options.children]: [],
+        };
+      }
+      arrMap[pid][options.children].push(treeItem);
+    }
+  }
+  return { tree: result, arrMap };
+}

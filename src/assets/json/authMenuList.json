@@ -43,7 +43,6 @@
             "isKeepAlive": true
           }
         },
-    
         {
           "path": "/ums/menu",
           "name": "menuList",
@@ -51,6 +50,20 @@
           "meta": {
             "icon": "Menu",
             "title": "菜单列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": true
+          }
+        },
+        {
+          "path": "/ums/department",
+          "name": "department",
+          "component": "/ums/department/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "部门列表",
             "isLink": "",
             "isHide": false,
             "isFull": false,
