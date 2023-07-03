@@ -295,3 +295,34 @@ export function findItemNested(enumData: any, callValue: any, value: string, chi
     if (current[children]) return findItemNested(current[children], callValue, value, children);
   }, null);
 }
+
+export function handleTree (arr: number[], options: { id: string, pid: string, children: string }) {
+      const result = [];   // 存放结果集
+      const arrMap = {};  // 
+      for (const item of arr) {
+        const id = item[options.id];
+        const pid = item[options.pid];
+
+        if (!arrMap[id]) {
+          arrMap[id] = {
+            ...item,
+            [options.children]: [],
+          }
+        }
+
+        const treeItem = arrMap[id];
+
+        if (pid === 0) {
+          result.push(treeItem);
+        } else {
+          if (!arrMap[pid]) {
+            arrMap[pid] = {
+              [options.children]: [],
+            }
+          }
+          arrMap[pid][options.children].push(treeItem)
+        }
+
+      }
+      return { result, arrMap };
+    }
