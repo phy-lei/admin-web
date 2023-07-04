@@ -48,6 +48,7 @@
             check-strictly
             :render-after-expand="false"
             multiple
+            :props="defaultProps"
           />
         </el-form-item>
         <el-form-item label="手机号码：" prop="lqbMobile">
@@ -134,9 +135,16 @@ import {
 } from '@/api/user';
 
 import { getAllRoleListApi } from '@/api/role';
+import { getDepartmentListAllApi, getDepartmentListByRoleIdApi } from '@/api/department';
+import { handleTree } from '@/utils/index';
 
 type ListItem = Awaited<ReturnType<typeof fetchListApi>>['list'];
 
+const defaultProps = {
+  children: 'children',
+  label: 'lqbDeptName',
+  value: 'lqbId',
+};
 const defaultAdmin = {
   id: null,
   username: null,
@@ -187,78 +195,17 @@ const rules = reactive<FormRules>({
   lqbPasswd: [{ required: true, message: '请填写密码', trigger: 'blur' }],
 });
 
-const departmentsList = ref([
-  {
-    value: '1',
-    label: 'Level one 1',
-    children: [
-      {
-        value: '1-1',
-        label: 'Level two 1-1',
-        children: [
-          {
-            value: '1-1-1',
-            label: 'Level three 1-1-1',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: '2',
-    label: 'Level one 2',
-    children: [
-      {
-        value: '2-1',
-        label: 'Level two 2-1',
-        children: [
-          {
-            value: '2-1-1',
-            label: 'Level three 2-1-1',
-          },
-        ],
-      },
-      {
-        value: '2-2',
-        label: 'Level two 2-2',
-        children: [
-          {
-            value: '2-2-1',
-            label: 'Level three 2-2-1',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: '3',
-    label: 'Level one 3',
-    children: [
-      {
-        value: '3-1',
-        label: 'Level two 3-1',
-        children: [
-          {
-            value: '3-1-1',
-            label: 'Level three 3-1-1',
-          },
-        ],
-      },
-      {
-        value: '3-2',
-        label: 'Level two 3-2',
-        children: [
-          {
-            value: '3-2-1',
-            label: 'Level three 3-2-1',
-          },
-        ],
-      },
-    ],
-  },
-]);
+const departmentsList = ref<Awaited<ReturnType<typeof getDepartmentListAllApi>>>([]);
+
+const getDepartmentListAllProcess = async () => {
+  const res = await getDepartmentListAllApi();
+  const { tree } = handleTree(res);
+  departmentsList.value = tree;
+  // return tree;
+};
 
 getAllRoleList();
+getDepartmentListAllProcess();
 
 function handleAdd() {
   data.dialogVisible = true;
@@ -302,7 +249,7 @@ function handleUpdate(row: ListItem[number]) {
   data.dialogVisible = true;
   data.isEdit = true;
   data.admin = Object.assign({}, row);
-  console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', data.admin);
+  getDepartmentListByRoleIdApi(row.lqbId);
 }
 async function handleDialogConfirm() {
   if (!ruleFormRef.value) return;
@@ -341,7 +288,7 @@ function handleAllocDialogConfirm() {
 }
 
 async function handleSelectRole(row: ListItem[number]) {
-  const res = await getRoleByIdApi(row.lqbId);
+  const res: any = await getRoleByIdApi(row.lqbId);
 
   data.allocAdminId = row.lqbId;
   data.allocDialogVisible = true;

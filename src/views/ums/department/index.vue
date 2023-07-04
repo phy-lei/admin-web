@@ -68,9 +68,7 @@ const columns: Partial<ColumnProps>[] = [
 
 const getDepartmentListAllProcess = async () => {
   const res = await getDepartmentListAllApi();
-  console.log('%c [ res ]', 'font-size:13px; background:pink; color:#bf2c9f;', res);
   const { tree } = handleTree(res);
-  console.log('%c [ xxx ]', 'font-size:13px; background:pink; color:#bf2c9f;', tree);
   return tree;
 };
 

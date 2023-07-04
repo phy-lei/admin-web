@@ -7,7 +7,7 @@ import { OAUTH } from '@/api/config/servicePort';
  * @name 用户管理模块
  */
 export const fetchListApi = async (params: ReqPage) =>
-  http.post<ResPage<UserListListItem[]>>(OAUTH + `/user/page`, params);
+  http.post<ResPage<UserListListItem>>(OAUTH + `/user/page`, params);
 
 export const getUserInfoApi = async (id: number) => http.get(OAUTH + `/user/${id}`);
 
