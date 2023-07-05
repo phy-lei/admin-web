@@ -109,8 +109,8 @@ const close = () => {
   }, 500);
 };
 
-const confirm = async () => {
-  await ruleFormRef.value?.validate((valid) => {
+const confirm = () => {
+  ruleFormRef.value?.validate((valid) => {
     if (valid) {
       emit('confirm', { ...data.value });
       close();

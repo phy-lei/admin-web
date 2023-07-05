@@ -23,7 +23,7 @@
   <!-- infoDialog -->
   <InfoDialog ref="infoRef"></InfoDialog>
   <!-- passwordDialog -->
-  <PasswordDialog ref="passwordRef"></PasswordDialog>
+  <PasswordDialog ref="passwordRef" @confirm="logoutAtom"></PasswordDialog>
 </template>
 
 <script setup lang="ts">
@@ -34,10 +34,19 @@ import { useUserStore } from '@/stores/modules/user';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import InfoDialog from './InfoDialog.vue';
 import PasswordDialog from './PasswordDialog.vue';
+import { logoutApi } from '@/api/login';
 
 const router = useRouter();
 const userStore = useUserStore();
 
+const logoutAtom = async () => {
+  // 1.执行退出登录接口
+  await logoutApi();
+  // 2.清除 Token
+  userStore.setToken('');
+  // 3.重定向到登陆页
+  router.replace(LOGIN_URL);
+};
 // 退出登录
 const logout = () => {
   ElMessageBox.confirm('您是否确认退出登录?', '温馨提示', {
@@ -45,14 +54,7 @@ const logout = () => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(async () => {
-    // 1.执行退出登录接口
-    // await logoutApi();
-
-    // 2.清除 Token
-    userStore.setToken('');
-
-    // 3.重定向到登陆页
-    router.replace(LOGIN_URL);
+    await logoutAtom();
     ElMessage.success('退出登录成功！');
   });
 };

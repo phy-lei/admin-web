@@ -28,3 +28,12 @@ export const allocRoleApi = async (id: number, params: number[]) =>
   http.post(OAUTH + `/user/role/update/${id}`, params);
 
 export const getRoleByIdApi = async (id: number) => http.get(OAUTH + `/user/role/${id}`);
+
+export const updatePasswordApi = async (params: {
+  /** 新密码 */
+  newPassword: string;
+  /** 旧密码 */
+  oldPassword: string;
+  /** 用户名 */
+  username: string;
+}) => http.post(OAUTH + `/user/password/update`, params);
