@@ -26,5 +26,5 @@ export const getAuthButtonListApi = () => {
 
 // 用户退出登录
 export const logoutApi = () => {
-  return http.post(OAUTH + `/user/logout`, { loginDevic: 'pc' }, { noLoading: true });
+  return http.post(OAUTH + `/user/logout`, { loginDevice: 'pc' }, { noLoading: true });
 };
