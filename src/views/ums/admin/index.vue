@@ -43,7 +43,7 @@
         </el-form-item>
         <el-form-item label="归属部门：" prop="departments">
           <el-tree-select
-            v-model="data.admin.departments"
+            v-model="data.admin.departmentIds"
             :data="departmentsList"
             check-strictly
             :render-after-expand="false"
@@ -65,14 +65,7 @@
             :disabled="data.isEdit"
           ></el-input>
         </el-form-item>
-        <el-form-item label="登录密码：" prop="lqbPasswd" required>
-          <el-input
-            v-model="data.admin.lqbPasswd"
-            style="width: 250px"
-            :disabled="data.isEdit"
-            type="password"
-          ></el-input>
-        </el-form-item>
+
         <el-form-item label="是否启用：" prop="lqbUserStatus">
           <el-radio-group v-model="data.admin.lqbUserStatus">
             <el-radio :label="1">是</el-radio>
@@ -132,10 +125,11 @@ import {
   deleteAdminApi,
   allocRoleApi,
   getRoleByIdApi,
+  getUserDetailApi,
 } from '@/api/user';
 
 import { getAllRoleListApi } from '@/api/role';
-import { getDepartmentListAllApi, getDepartmentListByRoleIdApi } from '@/api/department';
+import { getDepartmentListAllApi } from '@/api/department';
 import { handleTree } from '@/utils/index';
 
 type ListItem = Awaited<ReturnType<typeof fetchListApi>>['list'];
@@ -192,7 +186,6 @@ const data = reactive<any>({
 
 const rules = reactive<FormRules>({
   lqbUsername: [{ required: true, message: '请填写账号', trigger: 'blur' }],
-  lqbPasswd: [{ required: true, message: '请填写密码', trigger: 'blur' }],
 });
 
 const departmentsList = ref<Awaited<ReturnType<typeof getDepartmentListAllApi>>>([]);
@@ -245,11 +238,12 @@ function handleDelete(row: ListItem[number]) {
     });
   });
 }
-function handleUpdate(row: ListItem[number]) {
+async function handleUpdate(row: ListItem[number]) {
   data.dialogVisible = true;
   data.isEdit = true;
-  data.admin = Object.assign({}, row);
-  getDepartmentListByRoleIdApi(row.lqbId);
+  const res: any = await getUserDetailApi(row.lqbId);
+
+  data.admin = { ...row, departmentIds: res.departments.map((item) => item.lqbId) };
 }
 async function handleDialogConfirm() {
   if (!ruleFormRef.value) return;

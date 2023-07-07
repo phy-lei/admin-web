@@ -14,7 +14,7 @@ export const getUserInfoApi = async (id: number) => http.get(OAUTH + `/user/${id
 export const getCurrentUserInfoApi = async () => http.get(OAUTH + `/user/current`);
 
 export const createAdminApi = async (params: UserListListItem) =>
-  http.post(OAUTH + `/user/register`, params);
+  http.post(OAUTH + `/user/create`, params);
 
 export const updateAdminApi = async (params: UserListListItem) =>
   http.post(OAUTH + `/user/update/${params.lqbId}`, params);
@@ -37,3 +37,5 @@ export const updatePasswordApi = async (params: {
   /** 用户名 */
   username: string;
 }) => http.post(OAUTH + `/user/password/update`, params);
+
+export const getUserDetailApi = async (id: number) => http.get(OAUTH + `/user/${id}`);

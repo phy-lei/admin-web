@@ -29,6 +29,3 @@ export const updateDepartmentApi = async (params: DepartmentListItemDto) =>
   http.post(OAUTH + `/department/update/${params.lqbId}`, params);
 
 export const delDepartmentApi = async (id: number) => http.post(OAUTH + `/department/delete/${id}`);
-
-export const getDepartmentListByRoleIdApi = async (roleId: number) =>
-  http.get<DepartmentListItemDto[]>(OAUTH + `/role/listDepartment/${roleId}`);
