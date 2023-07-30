@@ -105,7 +105,7 @@ const edit = (row) => {
 };
 
 const del = (row) => {
-  ElMessageBox.confirm('是否要删除该角色?', '提示', {
+  ElMessageBox.confirm('是否要删除该部门?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
